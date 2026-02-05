@@ -1315,7 +1315,18 @@ body {
     transform: scale(0);
   }
 }
-.container * {
+..container * {
   -webkit-animation-play-state: paused !important;
           animation-play-state: paused !important;
-}/*# sourceMappingURL=main.css.map */
+}
+
+/* SweetAlert2 custom icon styles */
+.swal2-icon.swal2-icon-custom{
+  background: transparent !important;
+  border: none !important;
+  font-size: 64px;
+  line-height: 1;
+  padding: 0;
+}
+
+/*# sourceMappingURL=main.css.map */

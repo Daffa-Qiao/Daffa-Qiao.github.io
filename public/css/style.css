@@ -129,3 +129,12 @@ body {
         width: 100%;
     }
 }
+
+/* SweetAlert2: custom icon class for emoji flower */
+.swal2-icon.swal2-icon-custom {
+    background: transparent !important;
+    border: none !important;
+    font-size: 48px;
+    line-height: 1;
+    padding: 0;
+} 
