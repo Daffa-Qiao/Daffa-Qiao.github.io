@@ -45,7 +45,7 @@ onload = () => {
                     }).then(() => {
                         const num = '082123432959';
                         const waNum = num.replace(/^0+/, '62');
-                        const text = encodeURIComponent('yes i want');
+                        const text = encodeURIComponent("Yes! I will be your Valentine ❤️");
                         window.location.href = `https://wa.me/${waNum}?text=${text}`;
                     });
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
