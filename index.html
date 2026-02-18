@@ -1,25 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Valentine's Day</title>
-    <link rel="stylesheet" href="./public/css/style.css" />
-  </head>
-  <body>
-    <div class="container">
-      <div class="banner-gif">
-        <img id="banner" src="./public/images/mid.gif" alt="banner" />
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marhaban Ya Ramadan</title>
+  <link rel="stylesheet" href="./public/css/ramadhan.css" />
+</head>
+<body>
+  <div class="overlay"></div>
+  <div class="crescent"></div>
+  <header>
+    <h1>Marhaban ya Ramadhan 🌙</h1>
+    <p>Untuk kekasihku tersayang</p>
+  </header>
+
+  <main>
+    <!-- countdown section -->
+    <section class="countdown">
+      <div id="countdown-timer">
+        <div><span id="days">00</span><small>Hari</small></div>
+        <div><span id="hours">00</span><small>Jam</small></div>
+        <div><span id="minutes">00</span><small>Menit</small></div>
+        <div><span id="seconds">00</span><small>Detik</small></div>
       </div>
-      <h1 id="question-heading">Will you be my valentine?</h1>
-      <div class="buttons">
-        <button id="yes-button"><p>Yes</p></button>
-        <button id="no-button"><p>No</p></button>
-      </div>
-      <div class="message">
-        <h2 id="success-message">Yepppie, see you sooonnn :3</h2>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="./public/js/script.js"></script>
-  </body>
+    </section>
+
+    <!-- simple gallery (replace with actual Ramadhan images if available) -->
+    <section class="photo-gallery">
+      <img src="./public/images/mid.gif" alt="Gallery image 1">
+      <img src="./public/images/yes.gif" alt="Gallery image 2">
+      <img src="./public/images/no.gif" alt="Gallery image 3">
+    </section>
+
+    <!-- secret message card -->
+    <section class="message-card">
+      <h2 id="secret-title">Klik untuk melihat pesan sayang</h2>
+      <button id="reveal-btn">Buka</button>
+      <p id="secret-message" class="hidden">
+        Aku akan merindukanmu saat ini sayangku. Marhaban Ya Ramadhan sayangku 💖
+      </p>
+    </section>
+  </main>
+
+  <!-- optional background music (place an mp3 in public/music/ramadhan.mp3) -->
+  <audio id="bg-music" loop preload="auto">
+    <source src="./public/music/ramadhan.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <footer>
+    <p>© 2026 by <a href="#" class="creator">Daffa</a></p>
+  </footer>
+
+  <script src="./public/js/ramadhan.js"></script>
+</body>
 </html>

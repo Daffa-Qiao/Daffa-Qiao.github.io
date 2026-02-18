@@ -102,16 +102,15 @@ no_button.addEventListener('click', () => {
 });
 
 yes_button.addEventListener('click', () => {
-    // Tampilkan SweetAlert2 lalu pindah ke flower.html (menggunakan emoji bunga sebagai ikon)
-    Swal.fire({
-        title: 'Thank u and this is ur suprise',
-        iconHtml: '🌸',
-        customClass: { icon: 'swal2-icon-custom' },
-        confirmButtonText: 'OK'
-    }).then(() => {
-        // Pindah ke halaman flower setelah menutup popup
-        window.location.href = 'flower.html';
-    });
+    // Redirect ke WhatsApp dengan pesan pra-isi (082123432959 → 6282123432959)
+    const waNumber = '6282123432959';
+    // Ambil pesan berdasarkan bahasa yang dipilih (fallback ke English)
+    const message = messages_prefill[language] || messages_prefill['english'] || 'Yes!';
+    const encoded = encodeURICompronent(message);
+    const waUrl = `https://wa.me/${waNumber}?text=${encoded}`;
+    // Buka di tab yang sama agar langsung memindahkan pengguna
+    
+    window.location.href = "https://daffa-qiao.github.io/flower";
 });
 
 function refreshBanner() {

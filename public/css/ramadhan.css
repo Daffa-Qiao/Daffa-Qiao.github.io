@@ -1,0 +1,204 @@
+/* general reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  position: relative;
+  overflow-x: hidden;
+}
+
+a {
+  color: #f0e68c;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* overlay stars animation */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 200%;
+  /* tiny transparent dot pattern encoded */
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAQAAACENn/RAAAADUlEQVQYV2NkYGBg+M+ABAAAAmAB9jNqHwAAAABJRU5ErkJggg==') repeat;
+  animation: moveStars 120s linear infinite;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+@keyframes moveStars {
+  from { transform: translate(0,0); }
+  to { transform: translate(-50%, -50%); }
+}
+
+header {
+  text-align: center;
+  padding: 3rem 1rem 1rem;
+  color: #fff;
+}
+
+header h1 {
+  font-size: 3rem;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from { text-shadow: 2px 2px 8px rgba(255,255,255,0.5); }
+  to { text-shadow: 4px 4px 20px rgba(255,255,255,1); }
+}
+
+header p {
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+}
+
+main {
+  padding: 2rem 1rem 4rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* countdown timer styles */
+.countdown {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+#countdown-timer {
+  display: flex;
+  gap: 1rem;
+  color: #fff;
+}
+
+#countdown-timer div {
+  background: rgba(255,255,255,0.1);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  min-width: 80px;
+  text-align: center;
+  backdrop-filter: blur(4px);
+}
+
+#countdown-timer span {
+  display: block;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+#countdown-timer small {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* gallery */
+.photo-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.photo-gallery img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  cursor: pointer;
+}
+
+.photo-gallery img:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* message card */
+.message-card {
+  text-align: center;
+  background: rgba(255,255,255,0.12);
+  padding: 2rem 1rem;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.message-card h2 {
+  font-size: 1.5rem;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.message-card button {
+  background: #f0e68c;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.message-card button:hover {
+  background: #fff;
+}
+
+.message-card p {
+  margin-top: 1.5rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.message-card p.visible {
+  opacity: 1;
+}
+
+.hidden {
+  display: none;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem 0;
+  color: #ddd;
+  font-size: 0.9rem;
+}
+
+/* decorative rotating crescent */
+.crescent {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 5px solid #f0e68c;
+  animation: rotate 12s linear infinite;
+  box-shadow: 0 0 10px rgba(240,230,140,0.5);
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* responsive tweaks */
+@media (max-width: 600px) {
+  header h1 { font-size: 2.2rem; }
+  #countdown-timer span { font-size: 1.5rem; }
+}
