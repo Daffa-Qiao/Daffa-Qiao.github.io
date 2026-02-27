@@ -23,7 +23,7 @@ var S = {
     if (i !== -1) {
       S.UI.simulate(decodeURI(action).substring(i + 3));
     } else {
-      S.UI.simulate("|#countdown 3||You|Are|My|Love||#rectangle|");
+      S.UI.simulate("|#countdown 3||You|Are|My|Someone|Special||#rectangle|");
     }
 
     // start rendering shapes
@@ -274,7 +274,7 @@ S.UI = (function () {
         firstAction = false;
         reset();
         // rerun default animation
-        performAction("|#countdown 3||You|Are|My|Love||#rectangle|");
+        performAction("|#countdown 3||You|Are|My|Someone|Special||#rectangle|");
       }
     });
 
