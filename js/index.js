@@ -224,7 +224,7 @@ S.UI = (function () {
       // top‑level sequence finished
       if (sequence.length === 0) {
         console.log('animation complete, will popup in 1s');
-        setTimeout(showPopup, 1000);
+        setTimeout(showPopup, 5000);
       }
     });
   }
