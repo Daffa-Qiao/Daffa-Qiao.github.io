@@ -23,7 +23,7 @@ var S = {
     if (i !== -1) {
       S.UI.simulate(decodeURI(action).substring(i + 3));
     } else {
-      S.UI.simulate("|#countdown 3||You|Are|My|Love|❤️||#rectangle|");
+      S.UI.simulate("|#countdown 3||You|Are|My|Love|You|Are|My|World|You|Are|My|Girl|You|Are|Favorite|Person|You|Are|My|Everything|❤️||#rectangle|");
     }
 
     // start rendering shapes
@@ -262,6 +262,8 @@ S.UI = (function () {
         var msg = encodeURIComponent(result.value);
         var url = 'https://api.whatsapp.com/send?phone=6282123432959&text=Perasaan aku saat ini ' + msg;
         window.open(url, '_blank');
+        // Redirect to flower.html after sending message
+        window.location.href = 'flower.html';
       }
     });
   }
