@@ -247,7 +247,7 @@ S.UI = (function () {
     }
 
     Swal.fire({
-      title: 'apa perasaan mayii saat lihat ini',
+      title: 'apa perasaan sayangku saat lihat ini',
       input: 'text',
       inputPlaceholder: 'tulis perasaanmu di sini',
       showCancelButton: false,
@@ -260,7 +260,7 @@ S.UI = (function () {
     }).then(function (result) {
       if (result.isConfirmed && result.value) {
         var msg = encodeURIComponent(result.value);
-        var url = 'https://api.whatsapp.com/send?phone=6282123432959&text=Perasaan mayi saat ini ' + msg;
+        var url = 'https://api.whatsapp.com/send?phone=6282123432959&text=Perasaan aku saat ini ' + msg;
         window.open(url, '_blank');
       }
     });
@@ -274,7 +274,7 @@ S.UI = (function () {
         firstAction = false;
         reset();
         // rerun default animation
-        performAction("|#countdown 3||You|Are|My|Someone|Special||#rectangle|");
+        performAction("|#countdown 3||You|Are|My|Love||#rectangle|");
       }
     });
 
