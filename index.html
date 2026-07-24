@@ -2,62 +2,864 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ulang Tahun</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles/main.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>For Sasa</title>
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="76" font-size="76">♥</text></svg>' />
+  <style>
+    /* Ubah warna, teks, dan intensitas animasi dari variabel serta CONFIG di bawah. */
+    :root {
+      --night-1: #081126;
+      --night-2: #21133d;
+      --night-3: #50275e;
+      --day-1: #fff6fb;
+      --day-2: #ffddec;
+      --day-3: #cfeaff;
+      --pink: #ff7ab8;
+      --pink-soft: #ffd6ea;
+      --purple: #b58cff;
+      --blue: #87c9ff;
+      --white: #ffffff;
+      --glass: rgba(255, 255, 255, 0.13);
+      --glass-border: rgba(255, 255, 255, 0.28);
+      --text: #fff8fc;
+      --muted: rgba(255, 248, 252, 0.76);
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    body {
+      background: var(--night-1);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      touch-action: manipulation;
+    }
+
+    button {
+      color: inherit;
+      font: inherit;
+    }
+
+    .world {
+      background:
+        radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 42%), rgba(255, 122, 184, 0.24), transparent 26%),
+        linear-gradient(130deg, var(--night-1), var(--night-2), var(--night-3), #101d46);
+      height: 100dvh;
+      isolation: isolate;
+      overflow: hidden;
+      position: relative;
+      transition: background 900ms ease;
+      width: 100vw;
+    }
+
+    .world.day {
+      --glass: rgba(255, 255, 255, 0.42);
+      --glass-border: rgba(255, 255, 255, 0.62);
+      --text: #4f2457;
+      --muted: rgba(79, 36, 87, 0.72);
+      background:
+        radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 42%), rgba(255, 255, 255, 0.72), transparent 28%),
+        linear-gradient(130deg, var(--day-1), var(--day-2), var(--day-3));
+    }
+
+    .sky-canvas {
+      height: 100%;
+      inset: 0;
+      pointer-events: none;
+      position: absolute;
+      width: 100%;
+    }
+
+    #fxCanvas {
+      z-index: 3;
+    }
+
+    .moon {
+      background:
+        radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.96), rgba(255, 244, 213, 0.92) 42%, rgba(255, 235, 180, 0.84) 66%, rgba(255, 225, 160, 0.26) 68%, transparent 72%);
+      border-radius: 50%;
+      box-shadow: 0 0 52px rgba(255, 229, 174, 0.82), 0 0 130px rgba(255, 122, 184, 0.24);
+      height: clamp(6.2rem, 17vw, 11rem);
+      left: clamp(1.4rem, 8vw, 7rem);
+      position: absolute;
+      top: clamp(4.6rem, 11vh, 7rem);
+      transform: translate3d(calc(var(--mx, 0) * -16px), calc(var(--my, 0) * -10px), 0);
+      transition: opacity 700ms ease, transform 200ms ease-out;
+      width: clamp(6.2rem, 17vw, 11rem);
+      z-index: 1;
+    }
+
+    .world.day .moon {
+      opacity: 0.38;
+    }
+
+    .cloud {
+      animation: cloudMove var(--speed) linear infinite;
+      background: rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      filter: blur(1px);
+      height: var(--h);
+      left: -35vw;
+      position: absolute;
+      top: var(--top);
+      transform: translate3d(0, calc(var(--my, 0) * 12px), 0);
+      width: var(--w);
+      z-index: 1;
+    }
+
+    .cloud::before,
+    .cloud::after {
+      background: inherit;
+      border-radius: 50%;
+      content: "";
+      height: 120%;
+      position: absolute;
+      top: -54%;
+      width: 42%;
+    }
+
+    .cloud::before {
+      left: 17%;
+    }
+
+    .cloud::after {
+      right: 18%;
+    }
+
+    .cloud.one {
+      --h: 4.2rem;
+      --speed: 58s;
+      --top: 22vh;
+      --w: 17rem;
+      animation-delay: -17s;
+    }
+
+    .cloud.two {
+      --h: 3.2rem;
+      --speed: 74s;
+      --top: 42vh;
+      --w: 13rem;
+      animation-delay: -43s;
+      opacity: 0.58;
+    }
+
+    .cloud.three {
+      --h: 3.8rem;
+      --speed: 68s;
+      --top: 12vh;
+      --w: 15rem;
+      animation-delay: -8s;
+      opacity: 0.48;
+    }
+
+    .message-orbit {
+      align-items: center;
+      display: grid;
+      inset: 0;
+      justify-items: center;
+      padding: 1rem;
+      pointer-events: none;
+      position: absolute;
+      z-index: 2;
+    }
+
+    .glass-card {
+      backdrop-filter: blur(22px);
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    }
+
+    .love-panel {
+      max-width: min(38rem, calc(100vw - 2rem));
+      padding: clamp(1.1rem, 4vw, 2rem);
+      text-align: center;
+      transform: translate3d(calc(var(--mx, 0) * 22px), calc(var(--my, 0) * 18px), 0);
+      transition: transform 180ms ease-out;
+    }
+
+    .small-label {
+      color: var(--pink-soft);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      margin: 0 0 0.9rem;
+      text-transform: uppercase;
+    }
+
+    .world.day .small-label {
+      color: #b5498d;
+    }
+
+    h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.25rem, 8.5vw, 5.6rem);
+      line-height: 0.96;
+      margin: 0 0 1rem;
+      text-shadow: 0 18px 44px rgba(255, 122, 184, 0.34);
+    }
+
+    .quote {
+      color: var(--muted);
+      font-size: clamp(1rem, 2.6vw, 1.25rem);
+      line-height: 1.75;
+      margin: 0 auto 1.2rem;
+      max-width: 30rem;
+      min-height: 4.5rem;
+      opacity: 1;
+      transition: opacity 520ms ease, transform 520ms ease;
+    }
+
+    .quote.fade {
+      opacity: 0;
+      transform: translateY(0.5rem);
+    }
+
+    .typed {
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.05rem, 2.7vw, 1.42rem);
+      line-height: 1.65;
+      margin: 0 auto;
+      min-height: 3.5rem;
+      max-width: 31rem;
+    }
+
+    .cursor {
+      animation: blink 850ms steps(2) infinite;
+      color: var(--pink);
+      font-weight: 700;
+    }
+
+    .controls {
+      bottom: calc(1rem + var(--safe-bottom));
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      justify-content: center;
+      left: 50%;
+      max-width: min(44rem, calc(100vw - 1rem));
+      padding: 0.7rem;
+      position: fixed;
+      transform: translateX(-50%);
+      width: max-content;
+      z-index: 5;
+    }
+
+    .control-btn {
+      align-items: center;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 999px;
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.14);
+      cursor: pointer;
+      display: inline-flex;
+      gap: 0.44rem;
+      min-height: 2.85rem;
+      overflow: hidden;
+      padding: 0.72rem 1rem;
+      position: relative;
+      transition: transform 220ms ease, background 220ms ease, box-shadow 220ms ease;
+      user-select: none;
+    }
+
+    .control-btn:hover {
+      background: rgba(255, 255, 255, 0.23);
+      box-shadow: 0 18px 44px rgba(255, 122, 184, 0.22);
+      transform: translateY(-2px);
+    }
+
+    .control-btn.is-active {
+      background: linear-gradient(135deg, rgba(255, 122, 184, 0.74), rgba(181, 140, 255, 0.64));
+    }
+
+    .toast {
+      left: 50%;
+      max-width: min(31rem, calc(100vw - 2rem));
+      opacity: 0;
+      padding: 1rem 1.2rem;
+      pointer-events: none;
+      position: fixed;
+      text-align: center;
+      top: 1rem;
+      transform: translate(-50%, -1rem) scale(0.96);
+      transition: opacity 320ms ease, transform 320ms ease;
+      z-index: 6;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0) scale(1);
+    }
+
+    .touch-hint {
+      bottom: calc(5.5rem + var(--safe-bottom));
+      color: var(--muted);
+      font-size: 0.9rem;
+      left: 50%;
+      max-width: min(34rem, calc(100vw - 2rem));
+      pointer-events: none;
+      position: fixed;
+      text-align: center;
+      transform: translateX(-50%);
+      z-index: 4;
+    }
+
+    .ripple {
+      animation: ripple 720ms ease-out forwards;
+      border: 1px solid rgba(255, 255, 255, 0.62);
+      border-radius: 50%;
+      height: 1rem;
+      left: var(--x);
+      pointer-events: none;
+      position: fixed;
+      top: var(--y);
+      transform: translate(-50%, -50%) scale(0);
+      width: 1rem;
+      z-index: 4;
+    }
+
+    @keyframes cloudMove {
+      to {
+        transform: translate3d(145vw, calc(var(--my, 0) * 12px), 0);
+      }
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes ripple {
+      to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(9);
+      }
+    }
+
+    @media (max-width: 680px) {
+      .love-panel {
+        border-radius: 22px;
+      }
+
+      .controls {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        width: calc(100vw - 1rem);
+      }
+
+      .control-btn {
+        justify-content: center;
+        padding-inline: 0.55rem;
+      }
+
+      .control-text {
+        font-size: 0.86rem;
+      }
+
+      .touch-hint {
+        bottom: calc(8rem + var(--safe-bottom));
+      }
+    }
+
+    @media (max-height: 520px) and (orientation: landscape) {
+      .love-panel {
+        max-width: min(36rem, calc(100vw - 12rem));
+        padding: 1rem;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 7vw, 4rem);
+      }
+
+      .quote {
+        min-height: 2.8rem;
+      }
+
+      .touch-hint {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
 </head>
 <body>
-  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+  <main class="world" id="world" aria-label="Dunia animasi romantis interaktif">
+    <canvas class="sky-canvas" id="skyCanvas" aria-hidden="true"></canvas>
+    <canvas class="sky-canvas" id="fxCanvas" aria-hidden="true"></canvas>
 
-  <div class="sky" aria-hidden="true">
-    <span class="balloon b1"></span>
-    <span class="balloon b2"></span>
-    <span class="balloon b3"></span>
-    <span class="balloon b4"></span>
-    <span class="balloon b5"></span>
-    <span class="balloon b6"></span>
-  </div>
+    <div class="moon" aria-hidden="true"></div>
+    <div class="cloud one" aria-hidden="true"></div>
+    <div class="cloud two" aria-hidden="true"></div>
+    <div class="cloud three" aria-hidden="true"></div>
 
-  <main class="container">
-    <section class="hero">
-      <p class="tag">Perayaan Spesial</p>
-      <h1>Happy Birthday My Sister!</h1>
-      <p id="typed-wish" class="wish">Semoga harimu dipenuhi tawa, hadiah manis, dan pelukan hangat dari orang-orang tersayang.</p>
-
-      <div class="controls">
-        <button id="surprise-btn" class="btn primary" type="button">Buka Ucapan</button>
-        <button id="music-btn" class="btn secondary" type="button">Putar Musik</button>
+    <section class="message-orbit">
+      <div class="love-panel glass-card">
+        <p class="small-label">Dunia kecil untuk dua hati</p>
+        <h1>Untuk Sasa &hearts;</h1>
+        <p class="quote" id="quoteText">Malam ini langit menyimpan nama Sasa di antara bintang.</p>
+        <p class="typed" id="typedText"></p><span class="cursor">|</span>
       </div>
     </section>
 
-    <section class="blessing-card" aria-live="polite">
-      <h2>Doa Spesial Untuk Adikku</h2>
-      <p id="blessing-text" class="blessing-text">
-        Semoga adikku selalu sehat, bahagia, dan dikelilingi orang-orang yang tulus menyayangimu.
-      </p>
-      <div class="controls blessing-controls">
-        <button id="new-blessing-btn" class="btn primary" type="button">Doa Baru</button>
-        <button id="copy-blessing-btn" class="btn secondary" type="button">Salin Doa</button>
-      </div>
-      <p id="copy-status" class="note" role="status" aria-live="polite">Klik Doa Baru untuk lihat pesan lain buat adikku.</p>
+    <p class="touch-hint">Klik, sentuh, atau gerakkan jarimu. Double tap untuk pesan rahasia.</p>
+
+    <section class="controls glass-card" aria-label="Kontrol animasi">
+      <button class="control-btn is-active" id="rainToggle" type="button" aria-pressed="true">
+        <span aria-hidden="true">&hearts;</span><span class="control-text">Hujan</span>
+      </button>
+      <button class="control-btn" id="modeToggle" type="button" aria-pressed="false">
+        <span aria-hidden="true">&#9789;</span><span class="control-text">Malam</span>
+      </button>
+      <button class="control-btn" id="musicToggle" type="button" aria-pressed="false">
+        <span aria-hidden="true">&#9654;</span><span class="control-text">Musik</span>
+      </button>
     </section>
 
-    <section id="message-card" class="message-card hidden">
-      <h3>Untuk Adik Kesayanganku</h3>
-      <p>
-        Selamat ulang tahun, adik paling heboh se-rumah. Terima kasih karena tanpa kamu, rumah ini mungkin
-        terlalu sepi, terlalu rapi, dan terlalu damai sampai membosankan. Kamu itu paket lengkap: kadang lucu,
-        kadang ngeselin, tapi selalu bikin kangen kalau lagi diem terlalu lama. Semoga di umur barumu, kamu makin
-        sehat, makin bahagia, makin pintar, dan tetap jadi adik yang kalau minta sesuatu suaranya paling kenceng
-        sedunia. Semoga semua cita-citamu tercapai, rezekimu lancar, langkahmu dimudahkan, dan semoga kamu traktir
-        kakak lebih sering karena sekarang kamu sudah makin dewasa.
-      </p>
-    </section>
+    <div class="toast glass-card" id="toast" role="status" aria-live="polite"></div>
+    <audio id="music" src="musik-romantis.mp3" preload="none" loop></audio>
   </main>
 
-  <script src="scripts/app.js"></script>
+  <script>
+    "use strict";
+
+    const CONFIG = {
+      musicPath: "musik-romantis.mp3",
+      typingMessage: "Di dunia kecil ini, setiap cahaya bergerak pelan hanya untuk mengingatkan: aku sayang Sasa, selalu.",
+      quotes: [
+        "Malam ini langit menyimpan nama Sasa di antara bintang.",
+        "Kalau cinta punya bentuk, mungkin ia selembut cahaya bulan ini.",
+        "Setiap detik bersama Sasa terasa seperti semesta sedang tersenyum.",
+        "Aku memilih Sasa dalam tenang, dalam ramai, dalam semua musim hati.",
+        "Sentuh layar ini, biar hati-hati kecil ikut merayakan kita."
+      ],
+      secretMessages: [
+        "Aku kangen Sasa lebih dari yang aku bilang.",
+        "Sasa adalah bagian favorit dari hariku.",
+        "Tetap di sini ya, semestaku lebih indah kalau ada Sasa.",
+        "Aku sayang Sasa. Sesederhana itu, sedalam itu."
+      ]
+    };
+
+    const world = document.getElementById("world");
+    const skyCanvas = document.getElementById("skyCanvas");
+    const fxCanvas = document.getElementById("fxCanvas");
+    const skyCtx = skyCanvas.getContext("2d");
+    const fxCtx = fxCanvas.getContext("2d");
+    const quoteText = document.getElementById("quoteText");
+    const typedText = document.getElementById("typedText");
+    const toast = document.getElementById("toast");
+    const rainToggle = document.getElementById("rainToggle");
+    const modeToggle = document.getElementById("modeToggle");
+    const musicToggle = document.getElementById("musicToggle");
+    const music = document.getElementById("music");
+
+    const state = {
+      width: 0,
+      height: 0,
+      pixelRatio: 1,
+      pointer: { x: 0, y: 0, tx: 0, ty: 0, active: false },
+      stars: [],
+      hearts: [],
+      lights: [],
+      petals: [],
+      bursts: [],
+      ripples: [],
+      trails: [],
+      rainOn: true,
+      dayMode: false,
+      musicOn: false,
+      lastTap: 0,
+      quoteIndex: 0,
+      lastTime: performance.now()
+    };
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function resizeCanvas() {
+      state.pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      state.width = window.innerWidth;
+      state.height = window.innerHeight;
+      [skyCanvas, fxCanvas].forEach((canvas) => {
+        canvas.width = Math.floor(state.width * state.pixelRatio);
+        canvas.height = Math.floor(state.height * state.pixelRatio);
+        canvas.style.width = `${state.width}px`;
+        canvas.style.height = `${state.height}px`;
+      });
+      [skyCtx, fxCtx].forEach((ctx) => {
+        ctx.setTransform(state.pixelRatio, 0, 0, state.pixelRatio, 0, 0);
+      });
+      buildScene();
+    }
+
+    function buildScene() {
+      const compact = state.width < 720 || state.height < 560;
+      const starCount = compact ? 72 : 130;
+      const lightCount = compact ? 28 : 48;
+      const petalCount = compact ? 16 : 28;
+
+      state.stars = Array.from({ length: starCount }, () => ({
+        x: random(0, state.width),
+        y: random(0, state.height * 0.8),
+        radius: random(0.6, 1.9),
+        alpha: random(0.3, 1),
+        twinkle: random(0.001, 0.004)
+      }));
+
+      state.lights = Array.from({ length: lightCount }, () => ({
+        x: random(0, state.width),
+        y: random(0, state.height),
+        vx: random(-0.16, 0.16),
+        vy: random(-0.12, 0.12),
+        radius: random(1, 3.4),
+        hue: random(310, 360)
+      }));
+
+      state.petals = Array.from({ length: petalCount }, createPetal);
+    }
+
+    function createPetal() {
+      return {
+        x: random(-40, state.width + 40),
+        y: random(-state.height, state.height),
+        vx: random(-0.28, 0.34),
+        vy: random(0.28, 0.82),
+        size: random(7, 16),
+        angle: random(0, Math.PI * 2),
+        spin: random(-0.018, 0.018),
+        color: Math.random() > 0.55 ? "#ffd6ea" : "#d9c2ff"
+      };
+    }
+
+    function drawHeart(ctx, x, y, size, color, alpha, rotation) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rotation);
+      ctx.scale(size / 28, size / 28);
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(0, 8);
+      ctx.bezierCurveTo(-24, -8, -13, -26, 0, -13);
+      ctx.bezierCurveTo(13, -26, 24, -8, 0, 8);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function spawnHeartRain(amount) {
+      const limit = state.width < 720 ? 48 : 82;
+      for (let i = 0; i < amount && state.hearts.length < limit; i += 1) {
+        state.hearts.push({
+          x: random(0, state.width),
+          y: random(-80, -20),
+          vx: random(-0.28, 0.28),
+          vy: random(0.55, 1.65),
+          size: random(12, 30),
+          rotation: random(-0.5, 0.5),
+          spin: random(-0.012, 0.012),
+          alpha: random(0.52, 0.88),
+          color: Math.random() > 0.5 ? "#ff7ab8" : "#b58cff"
+        });
+      }
+    }
+
+    function createExplosion(x, y) {
+      for (let i = 0; i < 26; i += 1) {
+        const angle = (Math.PI * 2 * i) / 26 + random(-0.2, 0.2);
+        const speed = random(1.5, 5.4);
+        state.bursts.push({
+          x,
+          y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          life: 1,
+          decay: random(0.014, 0.028),
+          size: random(10, 24),
+          rotation: random(0, Math.PI),
+          spin: random(-0.08, 0.08),
+          color: Math.random() > 0.45 ? "#ff7ab8" : "#ffffff"
+        });
+      }
+    }
+
+    function addRipple(x, y) {
+      const ripple = document.createElement("span");
+      ripple.className = "ripple";
+      ripple.style.setProperty("--x", `${x}px`);
+      ripple.style.setProperty("--y", `${y}px`);
+      world.appendChild(ripple);
+      ripple.addEventListener("animationend", () => ripple.remove());
+    }
+
+    function addCursorTrail(x, y) {
+      if (matchMedia("(pointer: coarse)").matches) return;
+      state.trails.push({ x, y, life: 1, size: random(8, 16) });
+      if (state.trails.length > 34) state.trails.shift();
+    }
+
+    function updatePointer(x, y) {
+      state.pointer.tx = x;
+      state.pointer.ty = y;
+      const px = ((x / Math.max(state.width, 1)) - 0.5) * 2;
+      const py = ((y / Math.max(state.height, 1)) - 0.5) * 2;
+      world.style.setProperty("--mx", px.toFixed(3));
+      world.style.setProperty("--my", py.toFixed(3));
+      world.style.setProperty("--glow-x", `${(x / Math.max(state.width, 1)) * 100}%`);
+      world.style.setProperty("--glow-y", `${(y / Math.max(state.height, 1)) * 100}%`);
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2400);
+    }
+
+    function handleTap(event) {
+      const point = event.touches ? event.touches[0] : event;
+      const x = point.clientX;
+      const y = point.clientY;
+      const now = Date.now();
+      addRipple(x, y);
+      createExplosion(x, y);
+      spawnHeartRain(10);
+      updatePointer(x, y);
+
+      if (now - state.lastTap < 330) {
+        showSecretMessage();
+      }
+      state.lastTap = now;
+    }
+
+    function showSecretMessage() {
+      const message = CONFIG.secretMessages[Math.floor(Math.random() * CONFIG.secretMessages.length)];
+      showToast(message);
+      spawnHeartRain(18);
+    }
+
+    function rotateQuotes() {
+      quoteText.classList.add("fade");
+      window.setTimeout(() => {
+        state.quoteIndex = (state.quoteIndex + 1) % CONFIG.quotes.length;
+        quoteText.textContent = CONFIG.quotes[state.quoteIndex];
+        quoteText.classList.remove("fade");
+      }, 520);
+    }
+
+    function typeMessage() {
+      let index = 0;
+      function tick() {
+        typedText.textContent = CONFIG.typingMessage.slice(0, index);
+        index += 1;
+        if (index <= CONFIG.typingMessage.length) {
+          window.setTimeout(tick, 34);
+        }
+      }
+      tick();
+    }
+
+    function drawSky(time) {
+      skyCtx.clearRect(0, 0, state.width, state.height);
+
+      if (!state.dayMode) {
+        state.stars.forEach((star) => {
+          const pulse = Math.sin(time * star.twinkle + star.x) * 0.32 + 0.68;
+          skyCtx.globalAlpha = star.alpha * pulse;
+          skyCtx.fillStyle = "#ffffff";
+          skyCtx.beginPath();
+          skyCtx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+          skyCtx.fill();
+        });
+      }
+
+      state.lights.forEach((light) => {
+        const dx = state.pointer.x - light.x;
+        const dy = state.pointer.y - light.y;
+        const dist = Math.hypot(dx, dy) || 1;
+        if (dist < 170) {
+          light.vx -= (dx / dist) * 0.006;
+          light.vy -= (dy / dist) * 0.006;
+        }
+        light.x += light.vx;
+        light.y += light.vy;
+        light.vx *= 0.995;
+        light.vy *= 0.995;
+        if (light.x < -20) light.x = state.width + 20;
+        if (light.x > state.width + 20) light.x = -20;
+        if (light.y < -20) light.y = state.height + 20;
+        if (light.y > state.height + 20) light.y = -20;
+
+        const glow = skyCtx.createRadialGradient(light.x, light.y, 0, light.x, light.y, light.radius * 7);
+        glow.addColorStop(0, `hsla(${light.hue}, 100%, 78%, 0.42)`);
+        glow.addColorStop(1, "rgba(255,255,255,0)");
+        skyCtx.globalAlpha = 1;
+        skyCtx.fillStyle = glow;
+        skyCtx.beginPath();
+        skyCtx.arc(light.x, light.y, light.radius * 7, 0, Math.PI * 2);
+        skyCtx.fill();
+      });
+    }
+
+    function drawPetals(delta) {
+      state.petals.forEach((petal) => {
+        petal.x += petal.vx * delta + Math.sin(petal.y * 0.015) * 0.3;
+        petal.y += petal.vy * delta;
+        petal.angle += petal.spin * delta;
+        if (petal.y > state.height + 40 || petal.x < -70 || petal.x > state.width + 70) {
+          Object.assign(petal, createPetal(), { y: -40 });
+        }
+
+        fxCtx.save();
+        fxCtx.translate(petal.x, petal.y);
+        fxCtx.rotate(petal.angle);
+        fxCtx.globalAlpha = 0.78;
+        fxCtx.fillStyle = petal.color;
+        fxCtx.beginPath();
+        fxCtx.ellipse(0, 0, petal.size * 0.42, petal.size, 0, 0, Math.PI * 2);
+        fxCtx.fill();
+        fxCtx.restore();
+      });
+    }
+
+    function drawHearts(delta) {
+      if (state.rainOn && Math.random() < 0.32) spawnHeartRain(1);
+      state.hearts = state.hearts.filter((heart) => heart.y < state.height + 70);
+      state.hearts.forEach((heart) => {
+        heart.x += heart.vx * delta + Math.sin(heart.y * 0.01) * 0.16;
+        heart.y += heart.vy * delta;
+        heart.rotation += heart.spin * delta;
+        drawHeart(fxCtx, heart.x, heart.y, heart.size, heart.color, heart.alpha, heart.rotation);
+      });
+    }
+
+    function drawBursts(delta) {
+      state.bursts = state.bursts.filter((item) => item.life > 0);
+      state.bursts.forEach((item) => {
+        item.x += item.vx * delta;
+        item.y += item.vy * delta;
+        item.vy += 0.04 * delta;
+        item.rotation += item.spin * delta;
+        item.life -= item.decay * delta;
+        drawHeart(fxCtx, item.x, item.y, item.size, item.color, Math.max(item.life, 0), item.rotation);
+      });
+    }
+
+    function drawTrails(delta) {
+      state.trails = state.trails.filter((trail) => trail.life > 0);
+      state.trails.forEach((trail) => {
+        trail.life -= 0.035 * delta;
+        trail.y -= 0.18 * delta;
+        drawHeart(fxCtx, trail.x, trail.y, trail.size, "#ffd6ea", Math.max(trail.life, 0) * 0.72, 0);
+      });
+    }
+
+    function animate(time) {
+      const delta = Math.min((time - state.lastTime) / 16.67, 2);
+      state.lastTime = time;
+      state.pointer.x += (state.pointer.tx - state.pointer.x) * 0.08;
+      state.pointer.y += (state.pointer.ty - state.pointer.y) * 0.08;
+
+      drawSky(time);
+      fxCtx.clearRect(0, 0, state.width, state.height);
+      drawPetals(delta);
+      drawHearts(delta);
+      drawBursts(delta);
+      drawTrails(delta);
+      requestAnimationFrame(animate);
+    }
+
+    function toggleRain() {
+      state.rainOn = !state.rainOn;
+      rainToggle.classList.toggle("is-active", state.rainOn);
+      rainToggle.setAttribute("aria-pressed", String(state.rainOn));
+    }
+
+    function toggleMode() {
+      state.dayMode = !state.dayMode;
+      world.classList.toggle("day", state.dayMode);
+      modeToggle.classList.toggle("is-active", state.dayMode);
+      modeToggle.setAttribute("aria-pressed", String(state.dayMode));
+      modeToggle.querySelector(".control-text").textContent = state.dayMode ? "Siang" : "Malam";
+    }
+
+    function toggleMusic() {
+      if (state.musicOn) {
+        music.pause();
+        state.musicOn = false;
+        musicToggle.classList.remove("is-active");
+        musicToggle.setAttribute("aria-pressed", "false");
+        musicToggle.querySelector(".control-text").textContent = "Musik";
+        return;
+      }
+
+      music.play().then(() => {
+        state.musicOn = true;
+        musicToggle.classList.add("is-active");
+        musicToggle.setAttribute("aria-pressed", "true");
+        musicToggle.querySelector(".control-text").textContent = "Jeda";
+      }).catch(() => {
+        showToast("Tambahkan file musik-romantis.mp3 untuk mengaktifkan musik.");
+      });
+    }
+
+    function initEvents() {
+      window.addEventListener("resize", resizeCanvas);
+      window.addEventListener("pointermove", (event) => {
+        updatePointer(event.clientX, event.clientY);
+        addCursorTrail(event.clientX, event.clientY);
+      }, { passive: true });
+      world.addEventListener("click", (event) => {
+        if (event.target.closest("button")) return;
+        handleTap(event);
+      });
+      world.addEventListener("dblclick", (event) => {
+        if (event.target.closest("button")) return;
+        showSecretMessage();
+      });
+      world.addEventListener("touchstart", (event) => {
+        if (event.target.closest("button")) return;
+        handleTap(event);
+      }, { passive: true });
+      rainToggle.addEventListener("click", toggleRain);
+      modeToggle.addEventListener("click", toggleMode);
+      musicToggle.addEventListener("click", toggleMusic);
+    }
+
+    function init() {
+      music.src = CONFIG.musicPath;
+      state.pointer.x = state.pointer.tx = window.innerWidth / 2;
+      state.pointer.y = state.pointer.ty = window.innerHeight / 2;
+      resizeCanvas();
+      initEvents();
+      typeMessage();
+      window.setInterval(rotateQuotes, 4300);
+      requestAnimationFrame(animate);
+    }
+
+    init();
+  </script>
 </body>
 </html>

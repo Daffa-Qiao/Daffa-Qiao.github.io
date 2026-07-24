@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Code Daffa Qiao</title>
+  <style>
+    :root {
+      --bg1: #fef3c7;
+      --bg2: #fde68a;
+      --ink: #1f2937;
+      --card: #ffffffd9;
+      --accent: #f97316;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(145deg, var(--bg1), var(--bg2));
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+
+    .card {
+      width: min(420px, 100%);
+      background: var(--card);
+      border-radius: 20px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 18px 40px rgba(17, 24, 39, 0.15);
+      border: 1px solid #ffffff;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 1.6rem;
+    }
+
+    p {
+      margin: 0 0 16px;
+      line-height: 1.5;
+    }
+
+    #qrcode {
+      width: 250px;
+      height: 250px;
+      margin: 0 auto 16px;
+      padding: 10px;
+      background: #fff;
+      border-radius: 12px;
+    }
+
+    .url {
+      font-weight: 700;
+      word-break: break-all;
+      background: #fff7ed;
+      border: 1px dashed #fb923c;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 16px;
+    }
+
+    .btn {
+      display: inline-block;
+      text-decoration: none;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      padding: 10px 16px;
+      border-radius: 999px;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Scan QR ke Website</h1>
+    <p>Scan kode berikut untuk langsung membuka website Daffa Qiao.</p>
+
+    <div id="qrcode" aria-label="QR Code ke daffa-qiao.github.io"></div>
+
+    <div class="url">https://daffa-qiao.github.io</div>
+
+    <a class="btn" href="https://daffa-qiao.github.io" target="_blank" rel="noopener noreferrer">
+      Buka Website
+    </a>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script>
+    new QRCode(document.getElementById("qrcode"), {
+      text: "https://daffa-qiao.github.io",
+      width: 230,
+      height: 230,
+      colorDark: "#111827",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  </script>
+</body>
+</html>
