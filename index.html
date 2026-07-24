@@ -948,14 +948,14 @@
     </section>
 
     <div class="toast glass-card" id="toast" role="status" aria-live="polite"></div>
-    <audio id="music" src="musik-romantis.mp3" preload="none" loop></audio>
+    <audio id="music" src="./musik-romantis.mp3" preload="auto" autoplay loop></audio>
   </main>
 
   <script>
     "use strict";
 
     const CONFIG = {
-      musicPath: "musik-romantis.mp3",
+      musicPath: "./musik-romantis.mp3",
       storyLines: [
         "Hai, Sasa...",
         "Selamat datang di langit kecil ini.",
@@ -1369,28 +1369,45 @@
       modeToggle.querySelector(".control-text").textContent = state.dayMode ? "Siang" : "Malam";
     }
 
+    function setMusicUi(isPlaying) {
+      state.musicOn = isPlaying;
+      musicToggle.classList.toggle("is-active", isPlaying);
+      musicToggle.setAttribute("aria-pressed", String(isPlaying));
+      musicToggle.querySelector(".control-text").textContent = isPlaying ? "Jeda" : "Musik";
+    }
+
+    function startMusic({ silent = false } = {}) {
+      return music.play().then(() => {
+        state.musicOn = true;
+        setMusicUi(true);
+      }).catch(() => {
+        setMusicUi(false);
+        if (!silent) {
+          showToast("Ketuk layar sekali untuk mulai musik.");
+        }
+      });
+    }
+
     function toggleMusic() {
       if (state.musicOn) {
         music.pause();
-        state.musicOn = false;
-        musicToggle.classList.remove("is-active");
-        musicToggle.setAttribute("aria-pressed", "false");
-        musicToggle.querySelector(".control-text").textContent = "Musik";
+        setMusicUi(false);
         return;
       }
 
-      music.play().then(() => {
-        state.musicOn = true;
-        musicToggle.classList.add("is-active");
-        musicToggle.setAttribute("aria-pressed", "true");
-        musicToggle.querySelector(".control-text").textContent = "Jeda";
-      }).catch(() => {
-        showToast("Tambahkan file musik-romantis.mp3 untuk mengaktifkan musik.");
-      });
+      startMusic();
+    }
+
+    function unlockMusicOnce() {
+      if (!state.musicOn) {
+        startMusic({ silent: true });
+      }
     }
 
     function initEvents() {
       window.addEventListener("resize", resizeCanvas);
+      window.addEventListener("pointerdown", unlockMusicOnce, { once: true, passive: true });
+      window.addEventListener("touchstart", unlockMusicOnce, { once: true, passive: true });
       window.addEventListener("pointermove", (event) => {
         updatePointer(event.clientX, event.clientY);
         addCursorTrail(event.clientX, event.clientY);
@@ -1421,6 +1438,7 @@
       typeMessage();
       window.setInterval(rotateQuotes, 4300);
       requestAnimationFrame(animate);
+      startMusic({ silent: true });
     }
 
     init();
