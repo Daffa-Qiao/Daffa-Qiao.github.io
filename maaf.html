@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>localhost: maaf</title>
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="76" font-size="76">❤</text></svg>' />
+  <style>
+    :root {
+      --night-1: #050b1d;
+      --night-2: #121235;
+      --night-3: #351a57;
+      --pink: #ff7ab8;
+      --pink-soft: #ffd6ea;
+      --purple: #b58cff;
+      --blue: #87c9ff;
+      --cyan: #78f4ff;
+      --text: #fff8fc;
+      --muted: rgba(255, 248, 252, 0.72);
+      --glass: rgba(255, 255, 255, 0.11);
+      --glass-strong: rgba(255, 255, 255, 0.17);
+      --line: rgba(255, 255, 255, 0.25);
+      --danger: #ff7b9d;
+      --success: #91ffd2;
+      --shadow: 0 28px 90px rgba(0, 0, 0, 0.34);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      color: var(--text);
+      font-family: Consolas, "Courier New", monospace;
+      background: var(--night-1);
+      overflow-x: hidden;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .world {
+      position: relative;
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 28px 16px;
+      isolation: isolate;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 20% 18%, rgba(255, 122, 184, 0.2), transparent 26%),
+        radial-gradient(circle at 78% 22%, rgba(135, 201, 255, 0.2), transparent 29%),
+        radial-gradient(circle at 50% 110%, rgba(181, 140, 255, 0.2), transparent 34%),
+        linear-gradient(135deg, var(--night-1), var(--night-2) 48%, var(--night-3));
+    }
+
+    .world::before,
+    .world::after {
+      content: "";
+      position: absolute;
+      inset: -15%;
+      pointer-events: none;
+      z-index: -3;
+    }
+
+    .world::before {
+      background:
+        linear-gradient(112deg, transparent 15%, rgba(181, 140, 255, 0.08) 34%, rgba(255, 122, 184, 0.16) 49%, rgba(135, 201, 255, 0.08) 66%, transparent 82%),
+        radial-gradient(circle at 30% 80%, rgba(255, 214, 234, 0.13), transparent 28%);
+      filter: blur(20px);
+      animation: aurora 18s ease-in-out infinite alternate;
+    }
+
+    .world::after {
+      background:
+        radial-gradient(circle at 50% 42%, transparent 0 42%, rgba(4, 7, 20, 0.2) 78%, rgba(2, 3, 11, 0.7) 100%);
+      z-index: 8;
+      opacity: 0;
+      transition: opacity 900ms ease;
+    }
+
+    .world.failed::after {
+      opacity: 1;
+    }
+
+    .moon {
+      position: absolute;
+      top: clamp(24px, 8vw, 64px);
+      right: clamp(28px, 10vw, 120px);
+      width: clamp(64px, 14vw, 126px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 36% 30%, #fff 0 9%, transparent 10%),
+        radial-gradient(circle at 62% 60%, rgba(181, 140, 255, 0.2) 0 13%, transparent 14%),
+        linear-gradient(145deg, #fff8df, #ffe7f2 54%, #bbdcff);
+      box-shadow: 0 0 36px rgba(255, 232, 249, 0.55), 0 0 120px rgba(181, 140, 255, 0.28);
+      z-index: -1;
+    }
+
+    .stars,
+    .stars::before,
+    .stars::after {
+      position: absolute;
+      inset: 0;
+      content: "";
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255, 255, 255, 0.94) 0 1px, transparent 1.6px),
+        radial-gradient(circle, rgba(255, 214, 234, 0.86) 0 1px, transparent 1.7px),
+        radial-gradient(circle, rgba(135, 201, 255, 0.86) 0 1px, transparent 1.8px);
+      background-position: 9% 18%, 82% 26%, 46% 72%;
+      background-size: 180px 190px, 230px 210px, 280px 260px;
+      animation: twinkle 5s ease-in-out infinite alternate;
+      z-index: -2;
+    }
+
+    .stars::before {
+      opacity: 0.5;
+      transform: translateY(20px);
+      animation-delay: -2s;
+    }
+
+    .stars::after {
+      opacity: 0.42;
+      filter: blur(0.4px);
+      transform: scale(1.15);
+      animation-delay: -4s;
+    }
+
+    .shell {
+      width: min(880px, 100%);
+      position: relative;
+      z-index: 10;
+    }
+
+    .localhost-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 12px;
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.18);
+      font-size: clamp(0.72rem, 2vw, 0.88rem);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+      background: var(--pink);
+      box-shadow: 18px 0 0 var(--purple), 36px 0 0 var(--blue);
+    }
+
+    .address {
+      margin-left: 38px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .terminal {
+      min-height: clamp(440px, 68dvh, 650px);
+      padding: clamp(18px, 4vw, 30px);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.06)),
+        rgba(7, 10, 30, 0.56);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow), inset 0 0 80px rgba(181, 140, 255, 0.07);
+      overflow: hidden;
+    }
+
+    .terminal-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+      color: var(--muted);
+      font-size: clamp(0.72rem, 2vw, 0.88rem);
+    }
+
+    .terminal-title {
+      color: var(--pink-soft);
+      text-shadow: 0 0 14px rgba(255, 122, 184, 0.4);
+    }
+
+    .output {
+      display: grid;
+      gap: 13px;
+      align-content: start;
+      min-height: 320px;
+      line-height: 1.65;
+      font-size: clamp(0.95rem, 2.8vw, 1.15rem);
+    }
+
+    .line {
+      min-height: 1.65em;
+      color: rgba(255, 248, 252, 0.9);
+      text-shadow: 0 0 16px rgba(135, 201, 255, 0.12);
+      word-break: break-word;
+    }
+
+    .line::before {
+      content: ">";
+      margin-right: 10px;
+      color: var(--blue);
+      text-shadow: 0 0 14px rgba(135, 201, 255, 0.65);
+    }
+
+    .line.failed {
+      color: var(--danger);
+      font-weight: 700;
+      text-shadow: 0 0 16px rgba(255, 122, 184, 0.46);
+    }
+
+    .line.success {
+      color: var(--success);
+      font-weight: 700;
+      text-shadow: 0 0 16px rgba(145, 255, 210, 0.5);
+    }
+
+    .line.heart {
+      color: var(--pink-soft);
+      font-weight: 700;
+      text-shadow: 0 0 20px rgba(255, 122, 184, 0.6);
+    }
+
+    .cursor::after {
+      content: "";
+      display: inline-block;
+      width: 0.58em;
+      height: 1.12em;
+      margin-left: 4px;
+      transform: translateY(0.18em);
+      background: var(--pink-soft);
+      box-shadow: 0 0 16px rgba(255, 122, 184, 0.8);
+      animation: blink 750ms steps(1) infinite;
+    }
+
+    .actions {
+      min-height: 56px;
+      display: flex;
+      justify-content: center;
+      margin-top: 26px;
+    }
+
+    .fix-button {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px) scale(0.98);
+      border: 1px solid rgba(255, 255, 255, 0.44);
+      border-radius: 999px;
+      padding: 14px 22px;
+      color: #2c1231;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ffd6ea, #ff7ab8 46%, #87c9ff);
+      box-shadow: 0 16px 38px rgba(255, 122, 184, 0.34), 0 0 36px rgba(135, 201, 255, 0.22);
+      transition: opacity 420ms ease, transform 420ms ease, box-shadow 180ms ease;
+    }
+
+    .fix-button.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+
+    .fix-button:hover,
+    .fix-button:focus-visible {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 20px 42px rgba(255, 122, 184, 0.46), 0 0 44px rgba(135, 201, 255, 0.3);
+      outline: none;
+    }
+
+    .float-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 15;
+    }
+
+    .float {
+      position: absolute;
+      left: var(--x);
+      bottom: -40px;
+      color: var(--color);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: var(--size);
+      filter: drop-shadow(0 0 14px currentColor);
+      opacity: 0;
+      animation: floatUp var(--duration) ease-out forwards;
+    }
+
+    @keyframes aurora {
+      from {
+        transform: translate3d(-3%, 0, 0) rotate(-4deg);
+        opacity: 0.62;
+      }
+      to {
+        transform: translate3d(4%, -2%, 0) rotate(3deg);
+        opacity: 0.92;
+      }
+    }
+
+    @keyframes twinkle {
+      from {
+        opacity: 0.52;
+      }
+      to {
+        opacity: 0.95;
+      }
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translate3d(0, 0, 0) rotate(0deg) scale(0.72);
+        opacity: 0;
+      }
+      12%,
+      78% {
+        opacity: 1;
+      }
+      100% {
+        transform: translate3d(var(--drift), -105dvh, 0) rotate(var(--rotate)) scale(1.14);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .world {
+        padding: 18px 12px;
+      }
+
+      .localhost-bar {
+        border-radius: 14px;
+      }
+
+      .address {
+        margin-left: 34px;
+      }
+
+      .terminal {
+        min-height: 72dvh;
+        border-radius: 20px;
+      }
+
+      .terminal-head {
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 18px;
+      }
+
+      .output {
+        gap: 10px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="world" id="world">
+    <div class="stars"></div>
+    <div class="moon" aria-hidden="true"></div>
+    <div class="float-layer" id="floatLayer" aria-hidden="true"></div>
+
+    <section class="shell" aria-label="Halaman permintaan maaf untuk Sasa">
+      <div class="localhost-bar">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="address">http://localhost:3000/sasa/apology</span>
+      </div>
+
+      <div class="terminal">
+        <div class="terminal-head">
+          <span class="terminal-title">sasa-apology-devtools</span>
+          <span>status: <span id="statusText">booting</span></span>
+        </div>
+
+        <div class="output" id="output" aria-live="polite"></div>
+
+        <div class="actions">
+          <button class="fix-button" id="fixButton" type="button">Fix Bug ❤️</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const output = document.getElementById("output");
+    const world = document.getElementById("world");
+    const statusText = document.getElementById("statusText");
+    const fixButton = document.getElementById("fixButton");
+    const floatLayer = document.getElementById("floatLayer");
+    const whatsappUrl = "https://wa.me/6282123432959?text=" + encodeURIComponent("iyaa aku maafin");
+
+    const bootLines = [
+      "Connecting to localhost...",
+      "Loading project...",
+      "Initializing...",
+      "Compiling memories...",
+      "Please wait..."
+    ];
+
+    const apologyLines = [
+      "\"Hmm...\"",
+      "\"Ada satu bug...\"",
+      "\"Bug terbesar hari ini...\"",
+      "\"Aku membuat seseorang menunggu.\"",
+      "\"Dan orang itu...\"",
+      "\"Sasa.\"",
+      "\"Maaf ya...\"",
+      "\"Aku sudah membuatmu menunggu.\"",
+      "\"Sampai akhirnya...\"",
+      "\"Kamu ketiduran.\"",
+      "\"Aku benar-benar minta maaf.\"",
+      "\"Harusnya...\"",
+      "\"Aku memberi kabar lebih cepat.\"",
+      "\"Bukan membuatmu terus menunggu.\"",
+      "\"Kalau saja waktu bisa di-rollback...\"",
+      "\"Aku pasti akan memperbaikinya.\"",
+      "\"Tapi...\"",
+      "\"Aku cuma bisa meminta maaf.\"",
+      "\"Dan berharap...\"",
+      "\"Kamu mau tersenyum lagi.\""
+    ];
+
+    const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    function addLine(text = "", className = "") {
+      const line = document.createElement("div");
+      line.className = `line ${className}`.trim();
+      line.textContent = text;
+      output.appendChild(line);
+      output.scrollTop = output.scrollHeight;
+      return line;
+    }
+
+    async function typeLine(text, className = "") {
+      const line = addLine("", `${className} cursor`);
+      for (const char of text) {
+        line.textContent += char;
+        await wait(char === "." ? 72 : 34);
+      }
+      line.classList.remove("cursor");
+      await wait(520);
+      return line;
+    }
+
+    async function boot() {
+      for (const line of bootLines) {
+        addLine(line);
+        await wait(720);
+      }
+
+      await wait(720);
+      addLine("Build Failed.", "failed");
+      statusText.textContent = "failed";
+      world.classList.add("failed");
+      await wait(1300);
+
+      statusText.textContent = "debugging";
+      for (const line of apologyLines) {
+        await typeLine(line, line.includes("Sasa") ? "heart" : "");
+      }
+
+      statusText.textContent = "waiting for fix";
+      fixButton.classList.add("show");
+      fixButton.focus({ preventScroll: true });
+    }
+
+    function celebrate() {
+      const symbols = ["❤️", "✦", "✧", "♡", "★"];
+      const colors = ["#ff7ab8", "#ffd6ea", "#b58cff", "#87c9ff", "#91ffd2"];
+
+      for (let i = 0; i < 54; i += 1) {
+        const item = document.createElement("span");
+        item.className = "float";
+        item.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        item.style.setProperty("--x", `${Math.random() * 100}%`);
+        item.style.setProperty("--size", `${18 + Math.random() * 22}px`);
+        item.style.setProperty("--duration", `${3.6 + Math.random() * 2.6}s`);
+        item.style.setProperty("--drift", `${-70 + Math.random() * 140}px`);
+        item.style.setProperty("--rotate", `${-35 + Math.random() * 70}deg`);
+        item.style.setProperty("--color", colors[Math.floor(Math.random() * colors.length)]);
+        item.style.animationDelay = `${Math.random() * 1.2}s`;
+        floatLayer.appendChild(item);
+        item.addEventListener("animationend", () => item.remove());
+      }
+    }
+
+    fixButton.addEventListener("click", async () => {
+      fixButton.classList.remove("show");
+      fixButton.disabled = true;
+      statusText.textContent = "rebuilding";
+      world.classList.remove("failed");
+
+      await typeLine("Rebuilding...");
+      await wait(500);
+      await typeLine("Success.", "success");
+      await typeLine("Thank you, Sasa ❤️", "heart");
+      statusText.textContent = "success";
+      celebrate();
+      await wait(900);
+      window.location.href = whatsappUrl;
+    });
+
+    boot();
+  </script>
+</body>
+</html>
