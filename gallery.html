@@ -865,7 +865,7 @@
   <aside class="music" aria-label="Music player">
     <button class="music-button" type="button" aria-label="Play music">♪</button>
     <span>music</span>
-    <audio src="audio/poo-bear.mp3" preload="auto" autoplay loop playsinline></audio>
+    <audio src="audio/bestpart.mp3" preload="auto" autoplay loop playsinline></audio>
   </aside>
 
   <div class="page">
@@ -1188,7 +1188,7 @@
     audio.addEventListener("pause", () => setMusicPlaying(false));
     audio.addEventListener("error", () => {
       musicButton.textContent = "♪";
-      musicButton.title = "audio/poo-bear.mp3 belum tersedia";
+      musicButton.title = "audio/bestpart.mp3 belum tersedia";
     });
 
     document.addEventListener("DOMContentLoaded", startMusic);
