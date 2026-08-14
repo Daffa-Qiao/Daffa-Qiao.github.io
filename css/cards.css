@@ -1,0 +1,18 @@
+.card-grid { width: min(1120px, 100%); display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 2rem; }
+.tilt-card { min-height: 18rem; padding: 1.4rem; transform-style: preserve-3d; transition: transform .22s ease, background .22s ease, box-shadow .22s ease; }
+.tilt-card:hover { background: var(--card-strong); box-shadow: 0 28px 90px rgba(255,77,136,.2); }
+.tilt-card span { color: var(--accent); }
+.tilt-card h3 { font-family: var(--font-title); font-size: 2rem; line-height: 1; }
+.tilt-card p { color: var(--muted); line-height: 1.7; }
+.quote-section blockquote { max-width: 920px; margin: 0; text-align: center; font-family: var(--font-title); font-size: clamp(3rem, 8vw, 7rem); line-height: .98; }
+.letter-section { text-align: center; }
+.envelope { width: min(22rem, 76vw); aspect-ratio: 1.48; border: 0; background: transparent; position: relative; perspective: 900px; filter: drop-shadow(0 30px 45px rgba(0,0,0,.4)); animation: float 4s ease-in-out infinite; }
+.envelope .body, .envelope .flap, .envelope .paper { position: absolute; inset: 0; border-radius: 18px; }
+.envelope .body { background: linear-gradient(145deg, rgba(255,77,136,.9), rgba(124,58,237,.86)); clip-path: polygon(0 32%, 50% 68%, 100% 32%, 100% 100%, 0 100%); border: 1px solid rgba(255,255,255,.34); z-index: 3; }
+.envelope .flap { background: linear-gradient(160deg, rgba(255,181,207,.92), rgba(124,58,237,.82)); clip-path: polygon(0 0, 100% 0, 50% 62%); transform-origin: top; transition: transform .8s cubic-bezier(.2,.8,.2,1); z-index: 4; }
+.envelope .paper { inset: 12% 12% auto; height: 78%; background: linear-gradient(180deg, #fff9fb, #ffe5ef); transform: translateY(38%); transition: transform .8s .15s cubic-bezier(.2,.8,.2,1); z-index: 2; }
+.envelope.open .flap { transform: rotateX(172deg); }
+.envelope.open .paper { transform: translateY(-42%); }
+.letter-paper { width: min(680px, 92vw); margin: 1.5rem auto 0; padding: 1.5rem; min-height: 8rem; opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+.letter-paper.show { opacity: 1; transform: none; }
+.letter-paper p { margin: 0; color: var(--text); line-height: 1.9; }

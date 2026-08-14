@@ -3,1445 +3,165 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>For You</title>
-  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="76" font-size="76">♥</text></svg>' />
-  <style>
-    /* Ubah warna, teks, dan intensitas animasi dari variabel serta CONFIG di bawah. */
-    :root {
-      --night-1: #081126;
-      --night-2: #21133d;
-      --night-3: #50275e;
-      --day-1: #fff6fb;
-      --day-2: #ffddec;
-      --day-3: #cfeaff;
-      --pink: #ff7ab8;
-      --pink-soft: #ffd6ea;
-      --purple: #b58cff;
-      --blue: #87c9ff;
-      --white: #ffffff;
-      --glass: rgba(255, 255, 255, 0.13);
-      --glass-border: rgba(255, 255, 255, 0.28);
-      --text: #fff8fc;
-      --muted: rgba(255, 248, 252, 0.76);
-      --shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-    }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    html,
-    body {
-      height: 100%;
-      margin: 0;
-      overflow: hidden;
-    }
-
-    body {
-      background: var(--night-1);
-      color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
-      touch-action: manipulation;
-    }
-
-    button {
-      color: inherit;
-      font: inherit;
-    }
-
-    .world {
-      background:
-        radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 42%), rgba(255, 184, 216, 0.18), transparent 28%),
-        radial-gradient(circle at 76% 18%, rgba(181, 140, 255, 0.16), transparent 30%),
-        linear-gradient(130deg, #050b1d, var(--night-1), var(--night-2), #161844, var(--night-3));
-      background-size: 130% 130%, 100% 100%, 240% 240%;
-      animation: midnightDrift 28s ease-in-out infinite alternate;
-      transform-origin: 50% 52%;
-      height: 100dvh;
-      isolation: isolate;
-      overflow: hidden;
-      position: relative;
-      transition: background 900ms ease;
-      width: 100vw;
-    }
-
-    .world.day {
-      --glass: rgba(255, 255, 255, 0.28);
-      --glass-border: rgba(187, 76, 137, 0.22);
-      --text: #552257;
-      --muted: rgba(83, 32, 86, 0.82);
-      background:
-        radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 42%), rgba(255, 255, 255, 0.62), transparent 28%),
-        linear-gradient(130deg, var(--day-1), var(--day-2), var(--day-3));
-    }
-
-    .world::before {
-      animation: filmBreath 14s ease-in-out infinite alternate;
-      background:
-        radial-gradient(circle at 50% 42%, transparent 0 34%, rgba(5, 8, 25, 0.14) 72%, rgba(3, 5, 15, 0.48) 100%),
-        repeating-radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 4px);
-      content: "";
-      inset: -8%;
-      opacity: 0;
-      pointer-events: none;
-      position: absolute;
-      transform: scale(1.02);
-      z-index: 7;
-    }
-
-    .world::after {
-      animation: cameraDrift 34s ease-in-out infinite alternate;
-      background:
-        radial-gradient(circle at 68% 18%, rgba(255, 214, 234, 0.12), transparent 22%),
-        radial-gradient(circle at 28% 70%, rgba(135, 201, 255, 0.08), transparent 30%);
-      content: "";
-      inset: -10%;
-      pointer-events: none;
-      position: absolute;
-      transform: scale(1);
-      z-index: 0;
-    }
-
-    .depth-layer,
-    .aurora,
-    .mist,
-    .shooting-star,
-    .foreground-glow {
-      inset: 0;
-      pointer-events: none;
-      position: absolute;
-    }
-
-    .depth-layer {
-      background:
-        radial-gradient(circle at 14% 85%, rgba(255, 122, 184, 0.16), transparent 24%),
-        radial-gradient(circle at 88% 74%, rgba(135, 201, 255, 0.13), transparent 26%);
-      filter: blur(10px);
-      opacity: 0.82;
-      transform: translate3d(calc(var(--mx, 0) * -10px), calc(var(--my, 0) * -8px), 0);
-      z-index: 0;
-    }
-
-    .aurora {
-      animation: auroraBreathe 16s ease-in-out infinite alternate;
-      background:
-        linear-gradient(105deg, transparent 16%, rgba(181, 140, 255, 0.06) 28%, rgba(255, 122, 184, 0.18) 44%, rgba(135, 201, 255, 0.08) 58%, transparent 72%),
-        linear-gradient(78deg, transparent 18%, rgba(255, 210, 232, 0.1) 40%, rgba(181, 140, 255, 0.08) 58%, transparent 78%);
-      filter: blur(18px);
-      mix-blend-mode: screen;
-      opacity: 0.7;
-      transform: translate3d(calc(var(--mx, 0) * -18px), calc(var(--my, 0) * -12px), 0) rotate(-4deg);
-      z-index: 0;
-    }
-
-    .mist {
-      animation: mistWander 24s ease-in-out infinite alternate;
-      background:
-        radial-gradient(ellipse at 24% 72%, rgba(255, 255, 255, 0.12), transparent 34%),
-        radial-gradient(ellipse at 70% 58%, rgba(255, 214, 234, 0.11), transparent 36%),
-        linear-gradient(180deg, transparent 48%, rgba(255, 255, 255, 0.08));
-      filter: blur(22px);
-      opacity: 0.76;
-      z-index: 2;
-    }
-
-    .foreground-glow {
-      background:
-        radial-gradient(circle at 50% 115%, rgba(255, 122, 184, 0.18), transparent 34%),
-        radial-gradient(circle at 12% 108%, rgba(216, 172, 118, 0.12), transparent 26%);
-      z-index: 4;
-    }
-
-    .shooting-star {
-      animation: shoot 18s cubic-bezier(0.2, 0.7, 0.1, 1) infinite;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.96), rgba(255, 190, 219, 0.7), transparent);
-      border-radius: 999px;
-      filter: drop-shadow(0 0 12px rgba(255, 226, 239, 0.9));
-      height: 2px;
-      left: 16%;
-      opacity: 0;
-      top: 18%;
-      transform: rotate(-22deg) translate3d(-20vw, 0, 0);
-      width: min(12rem, 30vw);
-      z-index: 2;
-    }
-
-    .shooting-star.two {
-      animation-delay: 4.6s;
-      animation-duration: 27s;
-      left: 62%;
-      top: 31%;
-      width: min(9rem, 24vw);
-    }
-
-    .sky-canvas {
-      height: 100%;
-      inset: 0;
-      pointer-events: none;
-      position: absolute;
-      width: 100%;
-      z-index: 1;
-    }
-
-    #fxCanvas {
-      z-index: 4;
-    }
-
-    .moon {
-      animation: moonRise 3.2s cubic-bezier(0.16, 1, 0.3, 1) both, moonGlow 8s ease-in-out 3.2s infinite alternate;
-      background:
-        radial-gradient(circle at 61% 36%, rgba(190, 168, 154, 0.26) 0 5%, transparent 6%),
-        radial-gradient(circle at 38% 58%, rgba(190, 168, 154, 0.2) 0 4%, transparent 5%),
-        radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.98), rgba(255, 244, 220, 0.92) 40%, rgba(255, 233, 190, 0.74) 64%, rgba(255, 225, 170, 0.22) 70%, transparent 74%);
-      border-radius: 50%;
-      box-shadow: 0 0 52px rgba(255, 229, 174, 0.82), 0 0 130px rgba(255, 122, 184, 0.24);
-      height: clamp(7.2rem, 18vw, 12.5rem);
-      left: clamp(1.1rem, 7vw, 6.4rem);
-      position: absolute;
-      top: clamp(3.4rem, 8vh, 5.8rem);
-      transform: translate3d(calc(var(--mx, 0) * -16px), calc(var(--my, 0) * -10px), 0);
-      transition: opacity 700ms ease, transform 200ms ease-out;
-      width: clamp(7.2rem, 18vw, 12.5rem);
-      z-index: 2;
-    }
-
-    .moon::before {
-      background: radial-gradient(circle, rgba(255, 244, 220, 0.32), transparent 68%);
-      border-radius: inherit;
-      content: "";
-      inset: -42%;
-      position: absolute;
-      z-index: -1;
-    }
-
-    .world.day .moon {
-      opacity: 0.38;
-    }
-
-    .cloud {
-      animation: cloudMove var(--speed) linear infinite;
-      background: rgba(255, 255, 255, 0.11);
-      border-radius: 999px;
-      filter: blur(1px);
-      height: var(--h);
-      left: -35vw;
-      position: absolute;
-      top: var(--top);
-      transform: translate3d(0, calc(var(--my, 0) * 12px), 0);
-      width: var(--w);
-      z-index: 3;
-    }
-
-    .cloud::before,
-    .cloud::after {
-      background: inherit;
-      border-radius: 50%;
-      content: "";
-      height: 120%;
-      position: absolute;
-      top: -54%;
-      width: 42%;
-    }
-
-    .cloud::before {
-      left: 17%;
-    }
-
-    .cloud::after {
-      right: 18%;
-    }
-
-    .cloud.one {
-      --h: 4.2rem;
-      --speed: 58s;
-      --top: 22vh;
-      --w: 17rem;
-      animation-delay: -17s;
-    }
-
-    .cloud.two {
-      --h: 3.2rem;
-      --speed: 74s;
-      --top: 42vh;
-      --w: 13rem;
-      animation-delay: -43s;
-      opacity: 0.58;
-    }
-
-    .cloud.three {
-      --h: 3.8rem;
-      --speed: 68s;
-      --top: 12vh;
-      --w: 15rem;
-      animation-delay: -8s;
-      opacity: 0.48;
-    }
-
-    .message-orbit {
-      align-items: stretch;
-      display: grid;
-      inset: 0;
-      justify-items: stretch;
-      padding: clamp(1rem, 5vw, 4.4rem);
-      pointer-events: none;
-      position: absolute;
-      z-index: 5;
-    }
-
-    .glass-card {
-      backdrop-filter: blur(22px);
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: 28px;
-      box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.22);
-    }
-
-    .love-panel {
-      animation: storyFloat 12s ease-in-out 3s infinite;
-      background: none;
-      border: 0;
-      box-shadow: none;
-      margin-left: clamp(11rem, 36vw, 32rem);
-      margin-top: clamp(4.6rem, 10vh, 6.6rem);
-      max-width: min(38rem, calc(100vw - 2rem));
-      padding: 0;
-      position: relative;
-      text-align: left;
-      transform: translate3d(calc(var(--mx, 0) * 22px), calc(var(--my, 0) * 18px), 0);
-      transition: transform 180ms ease-out;
-    }
-
-    .love-panel::before,
-    .love-panel::after {
-      content: none;
-    }
-
-    .story {
-      align-items: flex-start;
-      display: flex;
-      flex-direction: column;
-      gap: clamp(1.125rem, 1.7vh, 1.28rem);
-      max-height: min(70vh, 38rem);
-      min-height: 0;
-      overflow-x: hidden;
-      overflow-y: auto;
-      padding-bottom: 0.4rem;
-      padding-right: 0.8rem;
-      scrollbar-width: none;
-      width: min(38rem, calc(100vw - 2rem));
-      -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 8%, #000 86%, transparent 100%);
-      mask-image: linear-gradient(180deg, transparent 0, #000 8%, #000 86%, transparent 100%);
-      scroll-behavior: smooth;
-    }
-
-    .story::-webkit-scrollbar {
-      display: none;
-    }
-
-    .story p {
-      animation: storyLineIn 760ms ease both;
-      color: var(--muted);
-      filter: blur(0);
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(0.82rem, 1.05vw, 0.94rem);
-      font-weight: 400;
-      letter-spacing: 0.035em;
-      line-height: 1.36;
-      margin: 0;
-      max-width: 26rem;
-      opacity: 1;
-      text-align: left;
-      text-shadow: 0 0 18px rgba(255, 214, 234, 0.24);
-      transform: translate3d(0, 0, 0);
-      white-space: pre-wrap;
-    }
-
-    .story p:nth-child(2) {
-      color: var(--text);
-      font-size: clamp(1.05rem, 2.35vw, 1.72rem);
-      letter-spacing: 0.09em;
-      line-height: 1.28;
-      max-width: 29rem;
-      text-shadow: 0 0 24px rgba(255, 235, 245, 0.32), 0 18px 48px rgba(255, 122, 184, 0.16);
-    }
-
-    .story p:nth-child(3) {
-      margin-left: clamp(2.2rem, 7vw, 5.5rem);
-    }
-
-    .story p:nth-child(4),
-    .story p:nth-child(5),
-    .story p:nth-child(6) {
-      max-width: 24rem;
-    }
-
-    .story p:nth-child(6) {
-      color: var(--text);
-      margin-left: clamp(1.2rem, 5vw, 4rem);
-    }
-
-    .story p:nth-child(9),
-    .story p:nth-child(19) {
-      color: var(--text);
-      letter-spacing: 0.12em;
-      text-shadow: 0 0 24px rgba(255, 235, 245, 0.34), 0 14px 40px rgba(255, 122, 184, 0.16);
-    }
-
-    .typing-cursor {
-      animation: blink 850ms steps(2) infinite;
-      color: var(--pink);
-      display: inline-block;
-      font-family: Arial, Helvetica, sans-serif;
-      font-weight: 700;
-      margin-left: 0.18rem;
-      text-shadow: 0 0 16px rgba(255, 122, 184, 0.48);
-    }
-
-    .small-label {
-      color: var(--pink-soft);
-      font-size: clamp(0.9rem, 1.7vw, 1.05rem);
-      font-weight: 400;
-      letter-spacing: 0.05em;
-      margin: 0;
-      max-width: 22rem;
-      opacity: 0;
-      position: absolute;
-      text-shadow: 0 0 18px rgba(255, 214, 234, 0.34);
-      text-transform: none;
-      top: 0;
-      transition: opacity 900ms ease, transform 900ms ease, filter 900ms ease;
-    }
-
-    .world.day .small-label {
-      color: #b5498d;
-    }
-
-    h1 {
-      color: var(--text);
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(1.52rem, 4.6vw, 3rem);
-      font-weight: 400;
-      letter-spacing: 0.105em;
-      line-height: 1.24;
-      margin: 0;
-      max-width: 27rem;
-      opacity: 0;
-      position: absolute;
-      text-shadow: 0 0 24px rgba(255, 235, 245, 0.32), 0 18px 48px rgba(255, 122, 184, 0.16);
-      top: 28%;
-      transition: opacity 1000ms ease, transform 1000ms ease, filter 1000ms ease;
-    }
-
-    .world.day h1 {
-      color: #7d245f;
-      text-shadow: 0 10px 24px rgba(125, 36, 95, 0.18);
-    }
-
-    .quote {
-      color: var(--muted);
-      font-size: clamp(1rem, 2vw, 1.18rem);
-      line-height: 2;
-      margin: 0;
-      max-width: 20rem;
-      min-height: 3.5rem;
-      opacity: 0;
-      position: absolute;
-      top: 62%;
-      transition: opacity 900ms ease, transform 900ms ease, filter 900ms ease;
-    }
-
-    .world.day .quote,
-    .world.day .typed,
-    .world.day .touch-hint,
-    .world.day .toast {
-      color: #5a285c;
-    }
-
-    .world.day .love-panel {
-      box-shadow: none;
-    }
-
-    .world.day .toast {
-      background: rgba(255, 255, 255, 0.84);
-      border-color: rgba(187, 76, 137, 0.32);
-      font-weight: 700;
-    }
-
-    .quote.fade {
-      opacity: 0;
-      transform: translateY(0.5rem);
-    }
-
-    .typed {
-      color: var(--text);
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(0.96rem, 1.8vw, 1.08rem);
-      line-height: 1.9;
-      margin: 0;
-      min-height: 3.5rem;
-      max-width: 23rem;
-      opacity: 0;
-      position: absolute;
-      text-align: left;
-      text-shadow: 0 0 18px rgba(255, 214, 234, 0.22);
-      top: 62%;
-      transition: opacity 900ms ease, transform 900ms ease, filter 900ms ease;
-    }
-
-    .cursor {
-      animation: blink 850ms steps(2) infinite;
-      color: var(--pink);
-      font-weight: 700;
-      opacity: 0;
-      position: absolute;
-      top: 62%;
-    }
-
-    .story-line {
-      filter: blur(7px);
-      transform: translate3d(0, 0.7rem, 0);
-    }
-
-    .story-line.is-visible {
-      filter: blur(0);
-      opacity: 1;
-      transform: translate3d(0, 0, 0);
-    }
-
-    .controls {
-      animation: controlsEnter 1.4s ease 9.2s both;
-      bottom: calc(1.2rem + var(--safe-bottom));
-      display: flex;
-      flex-wrap: wrap;
-      flex-direction: column;
-      gap: 0.68rem;
-      justify-content: center;
-      left: auto;
-      max-width: min(44rem, calc(100vw - 1rem));
-      padding: 0;
-      position: fixed;
-      right: clamp(0.85rem, 3vw, 2rem);
-      transform: none;
-      width: max-content;
-      z-index: 5;
-    }
-
-    .control-btn {
-      align-items: center;
-      background: rgba(255, 255, 255, 0.075);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 999px;
-      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-      display: inline-flex;
-      gap: 0;
-      height: 2.65rem;
-      justify-content: center;
-      min-height: 2.65rem;
-      overflow: hidden;
-      padding: 0;
-      position: relative;
-      transition: transform 220ms ease, background 220ms ease, box-shadow 220ms ease;
-      user-select: none;
-      width: 2.65rem;
-    }
-
-    .control-text {
-      background: rgba(10, 12, 34, 0.42);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 999px;
-      bottom: auto;
-      font-size: 0.72rem;
-      left: auto;
-      opacity: 0;
-      padding: 0.34rem 0.55rem;
-      pointer-events: none;
-      position: absolute;
-      right: calc(100% + 0.55rem);
-      top: 50%;
-      transform: translate(0.3rem, -50%);
-      transition: opacity 220ms ease, transform 220ms ease;
-      white-space: nowrap;
-    }
-
-    .control-btn:hover .control-text,
-    .control-btn:focus-visible .control-text {
-      opacity: 1;
-      transform: translate(0, -50%);
-    }
-
-    .control-btn:nth-child(2) {
-    }
-
-    .control-btn:nth-child(3) {
-    }
-
-    .control-btn:hover {
-      background: rgba(255, 255, 255, 0.23);
-      box-shadow: 0 0 24px rgba(255, 190, 219, 0.34);
-      transform: translateY(-2px);
-    }
-
-    .control-btn.is-active {
-      background: linear-gradient(135deg, rgba(255, 122, 184, 0.36), rgba(181, 140, 255, 0.24));
-      border-color: rgba(255, 218, 236, 0.46);
-    }
-
-    .toast {
-      left: 50%;
-      max-width: min(31rem, calc(100vw - 2rem));
-      opacity: 0;
-      padding: 1rem 1.2rem;
-      pointer-events: none;
-      position: fixed;
-      text-align: center;
-      top: 1rem;
-      transform: translate(-50%, -1rem) scale(0.96);
-      transition: opacity 320ms ease, transform 320ms ease;
-      z-index: 6;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translate(-50%, 0) scale(1);
-    }
-
-    .touch-hint {
-      animation: lineReveal 1.4s ease 10s both;
-      bottom: calc(1.6rem + var(--safe-bottom));
-      color: var(--muted);
-      font-size: 0.88rem;
-      font-weight: 400;
-      left: clamp(1rem, 4vw, 3rem);
-      max-width: min(34rem, calc(100vw - 2rem));
-      pointer-events: none;
-      position: fixed;
-      text-align: center;
-      text-shadow: 0 0 18px rgba(255, 214, 234, 0.18);
-      transform: none;
-      z-index: 4;
-    }
-
-    .ripple {
-      animation: ripple 720ms ease-out forwards;
-      border: 1px solid rgba(255, 255, 255, 0.62);
-      border-radius: 50%;
-      height: 1rem;
-      left: var(--x);
-      pointer-events: none;
-      position: fixed;
-      top: var(--y);
-      transform: translate(-50%, -50%) scale(0);
-      width: 1rem;
-      z-index: 4;
-    }
-
-    @keyframes cloudMove {
-      to {
-        transform: translate3d(145vw, calc(var(--my, 0) * 12px), 0);
-      }
-    }
-
-    @keyframes midnightDrift {
-      0% {
-        background-position: 0% 50%, center, 0% 40%;
-      }
-      100% {
-        background-position: 100% 48%, center, 100% 60%;
-      }
-    }
-
-    @keyframes cameraDrift {
-      0% {
-        opacity: 0.55;
-        transform: translate3d(-1.2vw, 0.8vh, 0) scale(1);
-      }
-      100% {
-        opacity: 0.78;
-        transform: translate3d(1.6vw, -1vh, 0) scale(1.045);
-      }
-    }
-
-    @keyframes filmBreath {
-      0% {
-        opacity: 0.28;
-        transform: scale(1.02);
-      }
-      100% {
-        opacity: 0.46;
-        transform: scale(1.07);
-      }
-    }
-
-    @keyframes auroraBreathe {
-      0% {
-        opacity: 0.38;
-        transform: translate3d(calc(var(--mx, 0) * -18px), calc(var(--my, 0) * -12px), 0) rotate(-6deg) scale(1);
-      }
-      100% {
-        opacity: 0.86;
-        transform: translate3d(calc(var(--mx, 0) * -28px), calc(var(--my, 0) * -18px), 0) rotate(-2deg) scale(1.08);
-      }
-    }
-
-    @keyframes mistWander {
-      0% {
-        opacity: 0.44;
-        transform: translate3d(-3vw, 2vh, 0) scale(1);
-      }
-      100% {
-        opacity: 0.78;
-        transform: translate3d(4vw, -1vh, 0) scale(1.06);
-      }
-    }
-
-    @keyframes shoot {
-      0%, 74% {
-        opacity: 0;
-        transform: rotate(-22deg) translate3d(-18vw, 0, 0);
-      }
-      78% {
-        opacity: 1;
-      }
-      88%, 100% {
-        opacity: 0;
-        transform: rotate(-22deg) translate3d(58vw, 0, 0);
-      }
-    }
-
-    @keyframes moonRise {
-      from {
-        opacity: 0;
-        transform: translate3d(calc(var(--mx, 0) * -16px), calc(1.4rem + var(--my, 0) * -10px), 0) scale(0.92);
-      }
-      to {
-        opacity: 1;
-        transform: translate3d(calc(var(--mx, 0) * -16px), calc(var(--my, 0) * -10px), 0) scale(1);
-      }
-    }
-
-    @keyframes moonGlow {
-      from {
-        box-shadow: 0 0 44px rgba(255, 229, 174, 0.62), 0 0 110px rgba(255, 122, 184, 0.16);
-      }
-      to {
-        box-shadow: 0 0 68px rgba(255, 233, 190, 0.82), 0 0 160px rgba(181, 140, 255, 0.2);
-      }
-    }
-
-    @keyframes storyAppear {
-      from {
-        opacity: 0;
-        filter: blur(8px);
-      }
-      to {
-        opacity: 1;
-        filter: blur(0);
-      }
-    }
-
-    @keyframes storyLineIn {
-      from {
-        filter: blur(6px);
-        opacity: 0;
-        transform: translate3d(0, 0.7rem, 0);
-      }
-      to {
-        filter: blur(0);
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-      }
-    }
-
-    @keyframes lineReveal {
-      from {
-        opacity: 0;
-        transform: translate3d(0, 0.8rem, 0);
-      }
-      to {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-      }
-    }
-
-    @keyframes controlsEnter {
-      from {
-        opacity: 0;
-        transform: translate3d(0.8rem, 0, 0);
-      }
-      to {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-      }
-    }
-
-    @keyframes blink {
-      50% {
-        opacity: 0;
-      }
-    }
-
-    @keyframes ripple {
-      to {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(9);
-      }
-    }
-
-    @keyframes storyFloat {
-      0%, 100% {
-        opacity: 0.94;
-        translate: 0 0;
-      }
-      50% {
-        opacity: 1;
-        translate: 0 -0.75rem;
-      }
-    }
-
-    @keyframes stickerBob {
-      0%, 100% {
-        translate: 0 0;
-      }
-      50% {
-        translate: 0 -0.7rem;
-      }
-    }
-
-    @media (max-width: 680px) {
-      .love-panel {
-        margin-left: clamp(1.2rem, 8vw, 2.4rem);
-        margin-top: clamp(11rem, 23vh, 14rem);
-        max-width: min(22rem, calc(100vw - 2.2rem));
-      }
-
-      .story {
-        gap: 0.72rem;
-        max-height: min(52vh, 27rem);
-        min-height: 0;
-        width: min(22rem, calc(100vw - 2.2rem));
-      }
-
-      .story p {
-        font-size: clamp(0.72rem, 3.2vw, 0.9rem);
-        line-height: 1.34;
-        max-width: 18rem;
-      }
-
-      .story p:nth-child(2) {
-        font-size: clamp(1rem, 5vw, 1.45rem);
-      }
-
-      .moon {
-        left: clamp(1rem, 7vw, 2.2rem);
-        top: clamp(3rem, 8vh, 4.4rem);
-      }
-
-      .quote,
-      .typed {
-        max-width: 16rem;
-      }
-
-      .controls {
-        display: flex;
-        right: 0.8rem;
-        width: auto;
-      }
-
-      .control-btn {
-        justify-content: center;
-      }
-
-      .control-text {
-        font-size: 0.7rem;
-      }
-
-      .touch-hint {
-        bottom: calc(1.35rem + var(--safe-bottom));
-        max-width: calc(100vw - 6rem);
-        text-align: left;
-      }
-
-      .typed {
-        max-width: 18rem;
-      }
-    }
-
-    @media (max-height: 520px) and (orientation: landscape) {
-      .love-panel {
-        margin-left: clamp(12rem, 34vw, 24rem);
-        margin-top: clamp(2rem, 7vh, 3rem);
-        max-width: min(28rem, calc(100vw - 12rem));
-        padding: 1rem;
-      }
-
-      .story {
-        gap: 0.6rem;
-        max-height: 72vh;
-        min-height: 0;
-      }
-
-      .story p {
-        font-size: 0.72rem;
-        line-height: 1.24;
-      }
-
-      h1 {
-        font-size: clamp(2rem, 7vw, 4rem);
-      }
-
-      .quote {
-        min-height: 2.8rem;
-      }
-
-      .touch-hint {
-        display: none;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-  </style>
+  <title>Midnight Letter</title>
+  <meta name="description" content="A cinematic midnight letter made just for you." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Great+Vibes&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/hero.css" />
+  <link rel="stylesheet" href="css/cards.css" />
+  <link rel="stylesheet" href="css/gallery.css" />
+  <link rel="stylesheet" href="css/timeline.css" />
+  <link rel="stylesheet" href="css/footer.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
 </head>
 <body>
-  <main class="world" id="world" aria-label="Dunia animasi romantis interaktif">
-    <div class="depth-layer" aria-hidden="true"></div>
-    <div class="aurora" aria-hidden="true"></div>
-    <div class="mist" aria-hidden="true"></div>
-    <div class="shooting-star" aria-hidden="true"></div>
-    <div class="shooting-star two" aria-hidden="true"></div>
-    <canvas class="sky-canvas" id="skyCanvas" aria-hidden="true"></canvas>
-    <canvas class="sky-canvas" id="fxCanvas" aria-hidden="true"></canvas>
+  <div class="cursor-glow" aria-hidden="true"></div>
+  <canvas id="starCanvas" class="sky-canvas" aria-hidden="true"></canvas>
+  <canvas id="fireworkCanvas" class="firework-canvas" aria-hidden="true"></canvas>
 
-    <div class="moon" aria-hidden="true"></div>
-    <div class="cloud one" aria-hidden="true"></div>
-    <div class="cloud two" aria-hidden="true"></div>
-    <div class="cloud three" aria-hidden="true"></div>
-    <div class="foreground-glow" aria-hidden="true"></div>
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-mark">Midnight Letter</div>
+    <div class="loading-line"><span></span></div>
+    <p>Loading...</p>
+    <button class="enter-button magnetic" id="enterButton" type="button">Enter</button>
+  </div>
 
-    <section class="message-orbit">
-      <div class="love-panel" aria-live="polite">
-        <div class="story" id="story"></div>
-      </div>
-    </section>
+  <div class="page-shell" id="pageShell">
+    <div class="aurora-layer layer" data-depth="18"></div>
+    <div class="nebula-layer layer" data-depth="-10"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star delay"></div>
 
-    <p class="touch-hint">sentuh pelan langitnya</p>
+    <main>
+      <section class="hero section-panel" id="hero">
+        <p class="script-text reveal">A little place made just for you.</p>
+        <h1 class="reveal">Hi, <span id="personName">Clara</span></h1>
+        <p class="hero-kicker reveal">Welcome to</p>
+        <h2 class="reveal">Our Story</h2>
+        <a class="primary-button magnetic ripple" href="#story">Start Reading</a>
+        <div class="scroll-indicator" aria-hidden="true"><span></span></div>
+      </section>
 
-    <section class="controls glass-card" aria-label="Kontrol animasi">
-      <button class="control-btn is-active" id="rainToggle" type="button" aria-pressed="true">
-        <span aria-hidden="true">&#10084;&#65039;</span><span class="control-text">hati</span>
-      </button>
-      <button class="control-btn" id="modeToggle" type="button" aria-pressed="false">
-        <span aria-hidden="true">&#127769;</span><span class="control-text">langit</span>
-      </button>
-      <button class="control-btn" id="musicToggle" type="button" aria-pressed="false">
-        <span aria-hidden="true">&#127925;</span><span class="control-text">lagu</span>
-      </button>
-    </section>
+      <section class="story section-panel" id="story">
+        <div class="chapter-label reveal">Chapter One</div>
+        <div class="novel-reader glass-card reveal">
+          <p id="storyLine">Aku masih ingat...</p>
+        </div>
+      </section>
 
-    <div class="toast glass-card" id="toast" role="status" aria-live="polite"></div>
-    <audio id="music" src="./musik-romantis.mp3" preload="auto" autoplay loop></audio>
-  </main>
+      <section class="cards-section section-panel" id="cards">
+        <div class="section-heading reveal">
+          <p class="script-text">Little reasons</p>
+          <h2>Why this exists</h2>
+        </div>
+        <div class="card-grid">
+          <article class="tilt-card glass-card reveal"><span>01</span><h3>Because messages felt too small</h3><p>Ada hal-hal yang rasanya lebih baik disampaikan pelan-pelan.</p></article>
+          <article class="tilt-card glass-card reveal"><span>02</span><h3>Because effort matters</h3><p>Aku ingin membuat sesuatu yang bisa kamu buka kapan saja.</p></article>
+          <article class="tilt-card glass-card reveal"><span>03</span><h3>Because you are worth it</h3><p>Menurutku kamu pantas mendapatkan usaha yang lebih dari sekadar kata singkat.</p></article>
+          <article class="tilt-card glass-card reveal"><span>04</span><h3>Because I am serious</h3><p>Tidak terburu-buru, hanya ingin kamu tahu aku benar-benar ingin mengenalmu.</p></article>
+        </div>
+      </section>
 
-  <script>
-    "use strict";
+      <section class="gallery-section section-panel" id="gallery">
+        <div class="section-heading reveal">
+          <p class="script-text">Soft memories</p>
+          <h2>Gallery</h2>
+        </div>
+        <div class="marquee-gallery" id="galleryTrack" aria-label="Midnight gallery">
+          <button class="gallery-item" data-title="Langit malam"><span>Night Sky</span></button>
+          <button class="gallery-item" data-title="Kopi hangat"><span>Coffee</span></button>
+          <button class="gallery-item" data-title="Buku kecil"><span>Book</span></button>
+          <button class="gallery-item" data-title="Bunga"><span>Flowers</span></button>
+          <button class="gallery-item" data-title="Hujan pelan"><span>Rain</span></button>
+          <button class="gallery-item" data-title="Tempat tenang"><span>Quiet Corner</span></button>
+        </div>
+      </section>
 
-    const CONFIG = {
-      musicPath: "./musik-romantis.mp3",
-      storyLines: [
-        "Hai",
-        "Selamat datang di langit kecil ini.",
-        "Malam ini...",
-        "Langit terlihat sedikit berbeda.",
-        "Bukan karena bulannya lebih terang.",
-        "Bukan juga karena bintangnya lebih banyak.",
-        "Tapi...",
-        "Karena ada satu nama yang terus terlintas.",
-        "Kamu.",
-        "Kalau setiap bintang punya seseorang untuk dijaga...",
-        "Aku berharap ada satu yang menjagamu malam ini.",
-        "Kalau hari ini melelahkan...",
-        "Istirahatlah sebentar.",
-        "Biarkan langit menemanimu.",
-        "Dan kalau nanti kamu tersenyum...",
-        "Mungkin bulan akan ikut tersenyum juga.",
-        "Terima kasih🤍..."
-      ],
-      quotes: [
-        "Malam ini...",
-        "langit jadi lebih pelan.",
-        "bulan menyimpan satu rahasia.",
-        "namanya kamu.",
-        "dan dunia kecil ini mulai hidup."
-      ],
-      secretMessages: [
-        "Aku kangen kamu. Iya, segitunya.",
-        "Kamu tuh bagian paling lucu dari hariku.",
-        "Jangan jauh-jauh ya, langit ini lebih bagus kalau ada kamu.",
-        "Aku sayang kamu. Banyak. Banget."
-      ]
-    };
+      <section class="letter-section section-panel" id="letter">
+        <div class="section-heading reveal">
+          <p class="script-text">A letter</p>
+          <h2>Open when you are ready</h2>
+        </div>
+        <button class="envelope reveal" id="envelope" type="button" aria-label="Open love letter">
+          <span class="flap"></span><span class="paper"></span><span class="body"></span>
+        </button>
+        <div class="letter-paper glass-card" id="letterPaper">
+          <p id="letterText"></p>
+        </div>
+      </section>
 
-    const world = document.getElementById("world");
-    const skyCanvas = document.getElementById("skyCanvas");
-    const fxCanvas = document.getElementById("fxCanvas");
-    const skyCtx = skyCanvas.getContext("2d");
-    const fxCtx = fxCanvas.getContext("2d");
-    const story = document.getElementById("story");
-    const toast = document.getElementById("toast");
-    const rainToggle = document.getElementById("rainToggle");
-    const modeToggle = document.getElementById("modeToggle");
-    const musicToggle = document.getElementById("musicToggle");
-    const music = document.getElementById("music");
+      <section class="timeline-section section-panel" id="timeline">
+        <div class="section-heading reveal">
+          <p class="script-text">Timeline</p>
+          <h2>Small moments</h2>
+        </div>
+        <div class="timeline-track">
+          <button class="timeline-dot" data-index="0">First</button>
+          <button class="timeline-dot" data-index="1">Talk</button>
+          <button class="timeline-dot" data-index="2">Smile</button>
+          <button class="timeline-dot" data-index="3">Hope</button>
+        </div>
+      </section>
 
-    const state = {
-      width: 0,
-      height: 0,
-      pixelRatio: 1,
-      pointer: { x: 0, y: 0, tx: 0, ty: 0, active: false },
-      stars: [],
-      hearts: [],
-      lights: [],
-      petals: [],
-      bursts: [],
-      ripples: [],
-      trails: [],
-      rainOn: true,
-      dayMode: false,
-      musicOn: false,
-      lastTap: 0,
-      quoteIndex: 0,
-      storyComplete: false,
-      lastTime: performance.now()
-    };
+      <section class="quote-section section-panel" id="quote">
+        <blockquote id="quoteText" class="reveal">Every moment with you is worth remembering.</blockquote>
+      </section>
 
-    function random(min, max) {
-      return Math.random() * (max - min) + min;
-    }
+      <section class="surprise-section section-panel" id="surprise">
+        <div class="section-heading reveal">
+          <p class="script-text">One more thing</p>
+          <h2>Surprise</h2>
+        </div>
+        <button class="primary-button magnetic ripple" id="surpriseButton" type="button">Open</button>
+        <div class="heart-field" id="heartField" aria-hidden="true"></div>
+      </section>
+    </main>
 
-    function resizeCanvas() {
-      state.pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
-      state.width = window.innerWidth;
-      state.height = window.innerHeight;
-      [skyCanvas, fxCanvas].forEach((canvas) => {
-        canvas.width = Math.floor(state.width * state.pixelRatio);
-        canvas.height = Math.floor(state.height * state.pixelRatio);
-        canvas.style.width = `${state.width}px`;
-        canvas.style.height = `${state.height}px`;
-      });
-      [skyCtx, fxCtx].forEach((ctx) => {
-        ctx.setTransform(state.pixelRatio, 0, 0, state.pixelRatio, 0, 0);
-      });
-      buildScene();
-    }
+    <footer class="footer-section">
+      <p class="script-text">Thank You</p>
+      <h2>For Reading</h2>
+      <p>Tidak perlu menjawab sekarang. Aku akan tetap menghargai apa pun jawabanmu.</p>
+      <button class="primary-button magnetic ripple" id="finalButton" type="button">Boleh aku mengenalmu lebih dekat? ❤️</button>
+    </footer>
+  </div>
 
-    function buildScene() {
-      const compact = state.width < 720 || state.height < 560;
-      const starCount = compact ? 72 : 130;
-      const lightCount = compact ? 28 : 48;
-      const petalCount = compact ? 16 : 28;
+  <aside class="music-player glass-card" aria-label="Music player">
+    <button id="playButton" type="button" aria-label="Play music">▶</button>
+    <div class="track-meta">
+      <strong>Midnight Piano</strong>
+      <input id="progress" type="range" min="0" max="100" value="0" aria-label="Music progress" />
+    </div>
+    <input id="volume" type="range" min="0" max="1" step="0.01" value="0.55" aria-label="Volume" />
+    <audio id="audio" src="audio/midnight-letter.mp3" preload="metadata"></audio>
+  </aside>
 
-      state.stars = Array.from({ length: starCount }, () => ({
-        x: random(0, state.width),
-        y: random(0, state.height * 0.8),
-        radius: random(0.6, 1.9),
-        alpha: random(0.3, 1),
-        twinkle: random(0.001, 0.004)
-      }));
+  <dialog class="timeline-modal glass-card" id="timelineModal">
+    <button class="modal-close" id="modalClose" type="button" aria-label="Close">×</button>
+    <div class="modal-image" id="modalImage"></div>
+    <p id="modalDate"></p>
+    <h3 id="modalTitle"></h3>
+    <p id="modalStory"></p>
+  </dialog>
 
-      state.lights = Array.from({ length: lightCount }, () => ({
-        x: random(0, state.width),
-        y: random(0, state.height),
-        vx: random(-0.16, 0.16),
-        vy: random(-0.12, 0.12),
-        radius: random(1, 3.4),
-        hue: random(310, 360)
-      }));
+  <dialog class="gallery-modal" id="galleryModal">
+    <button class="modal-close" id="galleryClose" type="button" aria-label="Close">×</button>
+    <div id="galleryPreview"></div>
+  </dialog>
 
-      state.petals = Array.from({ length: petalCount }, createPetal);
-    }
-
-    function createPetal() {
-      return {
-        x: random(-40, state.width + 40),
-        y: random(-state.height, state.height),
-        vx: random(-0.28, 0.34),
-        vy: random(0.28, 0.82),
-        size: random(7, 16),
-        angle: random(0, Math.PI * 2),
-        spin: random(-0.018, 0.018),
-        color: Math.random() > 0.55 ? "#ffd6ea" : "#d9c2ff"
-      };
-    }
-
-    function drawHeart(ctx, x, y, size, color, alpha, rotation) {
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(rotation);
-      ctx.scale(size / 28, size / 28);
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = color;
-      ctx.beginPath();
-      ctx.moveTo(0, 8);
-      ctx.bezierCurveTo(-24, -8, -13, -26, 0, -13);
-      ctx.bezierCurveTo(13, -26, 24, -8, 0, 8);
-      ctx.fill();
-      ctx.restore();
-    }
-
-    function spawnHeartRain(amount) {
-      const limit = state.width < 720 ? 30 : 50;
-      for (let i = 0; i < amount && state.hearts.length < limit; i += 1) {
-        state.hearts.push({
-          x: random(0, state.width),
-          y: random(-80, -20),
-          vx: random(-0.28, 0.28),
-          vy: random(0.55, 1.65),
-          size: random(12, 30),
-          rotation: random(-0.5, 0.5),
-          spin: random(-0.012, 0.012),
-          alpha: random(0.52, 0.88),
-          color: Math.random() > 0.5 ? "#ff7ab8" : "#b58cff"
-        });
-      }
-    }
-
-    function createExplosion(x, y) {
-      for (let i = 0; i < 26; i += 1) {
-        const angle = (Math.PI * 2 * i) / 26 + random(-0.2, 0.2);
-        const speed = random(1.5, 5.4);
-        state.bursts.push({
-          x,
-          y,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          life: 1,
-          decay: random(0.014, 0.028),
-          size: random(10, 24),
-          rotation: random(0, Math.PI),
-          spin: random(-0.08, 0.08),
-          color: Math.random() > 0.45 ? "#ff7ab8" : "#ffffff"
-        });
-      }
-    }
-
-    function addRipple(x, y) {
-      const ripple = document.createElement("span");
-      ripple.className = "ripple";
-      ripple.style.setProperty("--x", `${x}px`);
-      ripple.style.setProperty("--y", `${y}px`);
-      world.appendChild(ripple);
-      ripple.addEventListener("animationend", () => ripple.remove());
-    }
-
-    function addCursorTrail(x, y) {
-      if (matchMedia("(pointer: coarse)").matches) return;
-      state.trails.push({ x, y, life: 1, size: random(8, 16) });
-      if (state.trails.length > 34) state.trails.shift();
-    }
-
-    function updatePointer(x, y) {
-      state.pointer.tx = x;
-      state.pointer.ty = y;
-      const px = ((x / Math.max(state.width, 1)) - 0.5) * 2;
-      const py = ((y / Math.max(state.height, 1)) - 0.5) * 2;
-      world.style.setProperty("--mx", px.toFixed(3));
-      world.style.setProperty("--my", py.toFixed(3));
-      world.style.setProperty("--glow-x", `${(x / Math.max(state.width, 1)) * 100}%`);
-      world.style.setProperty("--glow-y", `${(y / Math.max(state.height, 1)) * 100}%`);
-    }
-
-    function showToast(message) {
-      toast.textContent = message;
-      toast.classList.add("show");
-      window.clearTimeout(showToast.timer);
-      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2400);
-    }
-
-    function handleTap(event) {
-      const point = event.touches ? event.touches[0] : event;
-      const x = point.clientX;
-      const y = point.clientY;
-      const now = Date.now();
-      addRipple(x, y);
-      createExplosion(x, y);
-      spawnHeartRain(10);
-      updatePointer(x, y);
-
-      if (now - state.lastTap < 330) {
-        showSecretMessage();
-      }
-      state.lastTap = now;
-    }
-
-    function showSecretMessage() {
-      const message = CONFIG.secretMessages[Math.floor(Math.random() * CONFIG.secretMessages.length)];
-      showToast(message);
-      spawnHeartRain(18);
-    }
-
-    function rotateQuotes() {
-      state.storyComplete = true;
-    }
-
-    function typeMessage() {
-      runOpeningStory();
-    }
-
-    function typeLine(text, onDone) {
-      let index = 0;
-      const line = document.createElement("p");
-      const textNode = document.createTextNode("");
-      const cursor = document.createElement("span");
-      cursor.className = "typing-cursor";
-      cursor.append(document.createTextNode("|"));
-      line.append(textNode, cursor);
-      story.append(line);
-      line.scrollIntoView({ behavior: "smooth", block: "end" });
-
-      function tick() {
-        if (index < text.length) {
-          textNode.appendData(text.charAt(index));
-          index += 1;
-          if (index % 8 === 0) {
-            line.scrollIntoView({ behavior: "smooth", block: "end" });
-          }
-          window.setTimeout(tick, 42);
-          return;
-        }
-        cursor.remove();
-        line.scrollIntoView({ behavior: "smooth", block: "end" });
-        window.setTimeout(() => {
-          if (onDone) onDone();
-        }, 820);
-      }
-
-      tick();
-    }
-
-    function runOpeningStory() {
-      let index = 0;
-
-      function typeNextLine() {
-        if (index >= CONFIG.storyLines.length) {
-          state.storyComplete = true;
-          return;
-        }
-
-        typeLine(CONFIG.storyLines[index], () => {
-          index += 1;
-          window.setTimeout(typeNextLine, 760);
-        });
-      }
-
-      window.setTimeout(typeNextLine, 900);
-    }
-
-    function drawSky(time) {
-      skyCtx.clearRect(0, 0, state.width, state.height);
-
-      if (!state.dayMode) {
-        state.stars.forEach((star) => {
-          const pulse = Math.sin(time * star.twinkle + star.x) * 0.32 + 0.68;
-          skyCtx.globalAlpha = star.alpha * pulse;
-          skyCtx.fillStyle = "#ffffff";
-          skyCtx.beginPath();
-          skyCtx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-          skyCtx.fill();
-        });
-      }
-
-      state.lights.forEach((light) => {
-        const dx = state.pointer.x - light.x;
-        const dy = state.pointer.y - light.y;
-        const dist = Math.hypot(dx, dy) || 1;
-        if (dist < 170) {
-          light.vx -= (dx / dist) * 0.006;
-          light.vy -= (dy / dist) * 0.006;
-        }
-        light.x += light.vx;
-        light.y += light.vy;
-        light.vx *= 0.995;
-        light.vy *= 0.995;
-        if (light.x < -20) light.x = state.width + 20;
-        if (light.x > state.width + 20) light.x = -20;
-        if (light.y < -20) light.y = state.height + 20;
-        if (light.y > state.height + 20) light.y = -20;
-
-        const glow = skyCtx.createRadialGradient(light.x, light.y, 0, light.x, light.y, light.radius * 7);
-        glow.addColorStop(0, `hsla(${light.hue}, 100%, 78%, 0.42)`);
-        glow.addColorStop(1, "rgba(255,255,255,0)");
-        skyCtx.globalAlpha = 1;
-        skyCtx.fillStyle = glow;
-        skyCtx.beginPath();
-        skyCtx.arc(light.x, light.y, light.radius * 7, 0, Math.PI * 2);
-        skyCtx.fill();
-      });
-    }
-
-    function drawPetals(delta) {
-      state.petals.forEach((petal) => {
-        petal.x += petal.vx * delta + Math.sin(petal.y * 0.015) * 0.3;
-        petal.y += petal.vy * delta;
-        petal.angle += petal.spin * delta;
-        if (petal.y > state.height + 40 || petal.x < -70 || petal.x > state.width + 70) {
-          Object.assign(petal, createPetal(), { y: -40 });
-        }
-
-        fxCtx.save();
-        fxCtx.translate(petal.x, petal.y);
-        fxCtx.rotate(petal.angle);
-        fxCtx.globalAlpha = 0.78;
-        fxCtx.fillStyle = petal.color;
-        fxCtx.beginPath();
-        fxCtx.ellipse(0, 0, petal.size * 0.42, petal.size, 0, 0, Math.PI * 2);
-        fxCtx.fill();
-        fxCtx.restore();
-      });
-    }
-
-    function drawHearts(delta) {
-      if (state.rainOn && Math.random() < 0.19) spawnHeartRain(1);
-      state.hearts = state.hearts.filter((heart) => heart.y < state.height + 70);
-      state.hearts.forEach((heart) => {
-        heart.x += heart.vx * delta + Math.sin(heart.y * 0.01) * 0.16;
-        heart.y += heart.vy * delta;
-        heart.rotation += heart.spin * delta;
-        drawHeart(fxCtx, heart.x, heart.y, heart.size, heart.color, heart.alpha, heart.rotation);
-      });
-    }
-
-    function drawBursts(delta) {
-      state.bursts = state.bursts.filter((item) => item.life > 0);
-      state.bursts.forEach((item) => {
-        item.x += item.vx * delta;
-        item.y += item.vy * delta;
-        item.vy += 0.04 * delta;
-        item.rotation += item.spin * delta;
-        item.life -= item.decay * delta;
-        drawHeart(fxCtx, item.x, item.y, item.size, item.color, Math.max(item.life, 0), item.rotation);
-      });
-    }
-
-    function drawTrails(delta) {
-      state.trails = state.trails.filter((trail) => trail.life > 0);
-      state.trails.forEach((trail) => {
-        trail.life -= 0.035 * delta;
-        trail.y -= 0.18 * delta;
-        drawHeart(fxCtx, trail.x, trail.y, trail.size, "#ffd6ea", Math.max(trail.life, 0) * 0.72, 0);
-      });
-    }
-
-    function animate(time) {
-      const delta = Math.min((time - state.lastTime) / 16.67, 2);
-      state.lastTime = time;
-      state.pointer.x += (state.pointer.tx - state.pointer.x) * 0.08;
-      state.pointer.y += (state.pointer.ty - state.pointer.y) * 0.08;
-
-      drawSky(time);
-      fxCtx.clearRect(0, 0, state.width, state.height);
-      drawPetals(delta);
-      drawHearts(delta);
-      drawBursts(delta);
-      drawTrails(delta);
-      requestAnimationFrame(animate);
-    }
-
-    function toggleRain() {
-      state.rainOn = !state.rainOn;
-      rainToggle.classList.toggle("is-active", state.rainOn);
-      rainToggle.setAttribute("aria-pressed", String(state.rainOn));
-    }
-
-    function toggleMode() {
-      state.dayMode = !state.dayMode;
-      world.classList.toggle("day", state.dayMode);
-      modeToggle.classList.toggle("is-active", state.dayMode);
-      modeToggle.setAttribute("aria-pressed", String(state.dayMode));
-      modeToggle.querySelector(".control-text").textContent = state.dayMode ? "Siang" : "Malam";
-    }
-
-    function setMusicUi(isPlaying) {
-      state.musicOn = isPlaying;
-      musicToggle.classList.toggle("is-active", isPlaying);
-      musicToggle.setAttribute("aria-pressed", String(isPlaying));
-      musicToggle.querySelector(".control-text").textContent = isPlaying ? "Jeda" : "Musik";
-    }
-
-    function startMusic({ silent = false } = {}) {
-      return music.play().then(() => {
-        state.musicOn = true;
-        setMusicUi(true);
-      }).catch(() => {
-        setMusicUi(false);
-        if (!silent) {
-          showToast("Ketuk layar sekali untuk mulai musik.");
-        }
-      });
-    }
-
-    function toggleMusic() {
-      if (state.musicOn) {
-        music.pause();
-        setMusicUi(false);
-        return;
-      }
-
-      startMusic();
-    }
-
-    function unlockMusicOnce() {
-      if (!state.musicOn) {
-        startMusic({ silent: true });
-      }
-    }
-
-    function initEvents() {
-      window.addEventListener("resize", resizeCanvas);
-      window.addEventListener("pointerdown", unlockMusicOnce, { once: true, passive: true });
-      window.addEventListener("touchstart", unlockMusicOnce, { once: true, passive: true });
-      window.addEventListener("pointermove", (event) => {
-        updatePointer(event.clientX, event.clientY);
-        addCursorTrail(event.clientX, event.clientY);
-      }, { passive: true });
-      world.addEventListener("click", (event) => {
-        if (event.target.closest("button")) return;
-        handleTap(event);
-      });
-      world.addEventListener("dblclick", (event) => {
-        if (event.target.closest("button")) return;
-        showSecretMessage();
-      });
-      world.addEventListener("touchstart", (event) => {
-        if (event.target.closest("button")) return;
-        handleTap(event);
-      }, { passive: true });
-      rainToggle.addEventListener("click", toggleRain);
-      modeToggle.addEventListener("click", toggleMode);
-      musicToggle.addEventListener("click", toggleMusic);
-    }
-
-    function init() {
-      music.src = CONFIG.musicPath;
-      state.pointer.x = state.pointer.tx = window.innerWidth / 2;
-      state.pointer.y = state.pointer.ty = window.innerHeight / 2;
-      resizeCanvas();
-      initEvents();
-      typeMessage();
-      window.setInterval(rotateQuotes, 4300);
-      requestAnimationFrame(animate);
-      startMusic({ silent: true });
-    }
-
-    init();
-  </script>
+  <script src="js/utils.js"></script>
+  <script src="js/typewriter.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/cursor.js"></script>
+  <script src="js/parallax.js"></script>
+  <script src="js/music.js"></script>
+  <script src="js/gallery.js"></script>
+  <script src="js/timeline.js"></script>
+  <script src="js/fireworks.js"></script>
+  <script src="js/surprise.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

@@ -1,0 +1,17 @@
+:root {
+  --bg: #030712;
+  --card: rgba(255, 255, 255, .08);
+  --card-strong: rgba(255, 255, 255, .13);
+  --line: rgba(255, 255, 255, .18);
+  --text: #f8fbff;
+  --muted: rgba(248, 251, 255, .68);
+  --accent: #ff4d88;
+  --violet: #7c3aed;
+  --blue: #3b82f6;
+  --cyan: #06b6d4;
+  --gold: #ffd98a;
+  --font-title: "Cormorant Garamond", Georgia, serif;
+  --font-body: "Poppins", Arial, sans-serif;
+  --font-script: "Great Vibes", cursive;
+  --shadow: 0 28px 80px rgba(0, 0, 0, .45);
+}

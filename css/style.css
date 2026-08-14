@@ -1,0 +1,45 @@
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-height: 100%;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--text);
+  cursor: none;
+  font-family: var(--font-body);
+}
+button, a { font: inherit; }
+button { color: inherit; }
+.sky-canvas, .firework-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.sky-canvas { z-index: 0; }
+.firework-canvas { z-index: 30; }
+.page-shell { position: relative; z-index: 1; min-height: 100vh; background: radial-gradient(circle at 50% 0, rgba(124,58,237,.22), transparent 32rem), linear-gradient(180deg, rgba(3,7,18,.22), var(--bg)); }
+.layer { position: fixed; inset: -20%; pointer-events: none; z-index: -1; }
+.aurora-layer { background: linear-gradient(110deg, transparent 22%, rgba(124,58,237,.36), rgba(59,130,246,.24), rgba(6,182,212,.22), transparent 74%); filter: blur(42px); opacity: .72; animation: aurora 16s ease-in-out infinite alternate; }
+.nebula-layer { background: radial-gradient(circle at 18% 34%, rgba(255,77,136,.24), transparent 18rem), radial-gradient(circle at 82% 68%, rgba(6,182,212,.16), transparent 22rem); filter: blur(18px); }
+.section-panel { min-height: 100vh; display: grid; place-items: center; padding: 6rem min(6vw, 5rem); position: relative; }
+.glass-card { background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); backdrop-filter: blur(22px); border-radius: 22px; }
+.reveal { opacity: 0; }
+.reveal.visible { animation: fadeUp .9s ease forwards; }
+.script-text { margin: 0; color: var(--gold); font-family: var(--font-script); font-size: clamp(2.2rem, 5vw, 4.8rem); }
+.section-heading { text-align: center; }
+.section-heading h2 { margin: .2rem 0 0; font-family: var(--font-title); font-size: clamp(2.8rem, 8vw, 6.8rem); line-height: .9; }
+.primary-button, .enter-button {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 3.4rem; padding: 0 1.4rem; border: 1px solid rgba(255,255,255,.28); border-radius: 999px; background: linear-gradient(135deg, rgba(255,77,136,.9), rgba(124,58,237,.78)); color: white; text-decoration: none; box-shadow: 0 18px 50px rgba(255,77,136,.24); overflow: hidden; position: relative;
+}
+.cursor-glow { position: fixed; width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,.32); background: radial-gradient(circle, rgba(255,77,136,.55), transparent 68%); pointer-events: none; z-index: 100; transform: translate(-50%, -50%); mix-blend-mode: screen; }
+.loading-screen { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; align-content: center; gap: 1.3rem; background: #030712; transition: opacity .9s ease, visibility .9s ease; }
+.loading-screen.hide { opacity: 0; visibility: hidden; }
+.loading-mark { font-family: var(--font-script); font-size: clamp(3rem, 9vw, 7rem); color: white; text-shadow: 0 0 28px rgba(255,77,136,.42); }
+.loading-line { width: min(22rem, 70vw); height: 2px; overflow: hidden; background: rgba(255,255,255,.12); }
+.loading-line span { display: block; width: 45%; height: 100%; background: linear-gradient(90deg, transparent, var(--accent), white); animation: loading 1.8s ease-in-out infinite; }
+.music-player { position: fixed; right: 1rem; bottom: 1rem; z-index: 40; display: flex; align-items: center; gap: .8rem; width: min(24rem, calc(100vw - 2rem)); padding: .8rem; }
+.music-player button { width: 2.6rem; height: 2.6rem; border-radius: 50%; border: 0; background: var(--accent); }
+.track-meta { display: grid; gap: .35rem; flex: 1; min-width: 0; }
+input[type="range"] { accent-color: var(--accent); min-width: 0; }
+.shooting-star { position: fixed; top: 20%; left: -20vw; z-index: 1; width: 16rem; height: 2px; background: linear-gradient(90deg, transparent, white, transparent); filter: drop-shadow(0 0 12px white); animation: shoot 8s ease-in-out infinite; }
+.shooting-star.delay { top: 48%; animation-delay: 3.4s; animation-duration: 11s; }
+.heart-pop { position: fixed; bottom: -2rem; color: var(--accent); animation: heartRise 4s ease-in forwards; z-index: 32; pointer-events: none; }
+.ripple-dot { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,.72); transform: translate(-50%, -50%) scale(0); animation: rippleOut .65s ease forwards; pointer-events: none; }
+@keyframes rippleOut { to { opacity: 0; transform: translate(-50%, -50%) scale(18); } }

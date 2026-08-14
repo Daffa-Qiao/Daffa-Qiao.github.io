@@ -1,0 +1,9 @@
+@keyframes fadeUp { from { opacity: 0; transform: translateY(28px); filter: blur(10px); } to { opacity: 1; transform: none; filter: blur(0); } }
+@keyframes aurora { 0% { transform: translate3d(-4%, -2%, 0) rotate(-8deg) scale(1); } 100% { transform: translate3d(4%, 3%, 0) rotate(6deg) scale(1.08); } }
+@keyframes pulseGlow { 50% { box-shadow: 0 0 34px rgba(255, 77, 136, .5), inset 0 0 26px rgba(255,255,255,.08); } }
+@keyframes shoot { 0%, 68% { opacity: 0; transform: translateX(-20vw) rotate(-24deg); } 72% { opacity: 1; } 82% { opacity: 0; transform: translateX(105vw) rotate(-24deg); } 100% { opacity: 0; } }
+@keyframes float { 50% { transform: translateY(-18px); } }
+@keyframes scrollDot { 0% { transform: translateY(0); opacity: .3; } 50% { opacity: 1; } 100% { transform: translateY(28px); opacity: 0; } }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes loading { to { transform: translateX(110%); } }
+@keyframes heartRise { to { transform: translateY(-120vh) scale(1.8) rotate(28deg); opacity: 0; } }

@@ -1,0 +1,13 @@
+@media (max-width: 860px) {
+  body { cursor: auto; }
+  .cursor-glow { display: none; }
+  .card-grid { grid-template-columns: 1fr; }
+  .section-panel { padding: 5rem 1rem; }
+  .timeline-track { align-items: stretch; flex-direction: column; }
+  .timeline-track::before { left: 50%; right: auto; top: 2rem; bottom: 2rem; width: 2px; height: auto; }
+  .timeline-dot { width: 5.4rem; }
+  .music-player { transform: scale(.92); transform-origin: bottom right; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+}

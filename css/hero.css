@@ -1,0 +1,9 @@
+.hero { text-align: center; overflow: hidden; }
+.hero h1 { margin: .5rem 0 0; font-family: var(--font-title); font-size: clamp(4rem, 14vw, 10rem); line-height: .82; }
+.hero h2 { margin: 0; font-family: var(--font-title); font-size: clamp(3.4rem, 11vw, 8rem); line-height: .9; color: transparent; background: linear-gradient(90deg, #fff, #ffd1e0, #93e8ff); -webkit-background-clip: text; background-clip: text; }
+.hero-kicker { margin: 1rem 0 .2rem; color: var(--muted); letter-spacing: .16em; text-transform: uppercase; }
+.scroll-indicator { position: absolute; bottom: 2rem; width: 24px; height: 46px; border: 1px solid rgba(255,255,255,.34); border-radius: 999px; }
+.scroll-indicator span { display: block; width: 5px; height: 5px; margin: 8px auto; border-radius: 50%; background: white; animation: scrollDot 1.5s infinite; }
+.novel-reader { width: min(760px, 92vw); min-height: 17rem; display: grid; place-items: center; padding: clamp(2rem, 6vw, 4rem); text-align: center; }
+.novel-reader p { margin: 0; font-family: var(--font-title); font-size: clamp(2.2rem, 7vw, 5.8rem); line-height: 1.05; }
+.chapter-label { margin-bottom: 1rem; color: var(--accent); letter-spacing: .18em; text-transform: uppercase; }

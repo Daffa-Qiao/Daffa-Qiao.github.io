@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Indy ♡</title>
+  <style>
+    :root {
+      --ink: #02040d;
+      --midnight: #070b18;
+      --navy: #0b1225;
+      --plum: #1c1322;
+      --ivory: #f4eadc;
+      --champagne: #d8c39e;
+      --rose: #b98786;
+      --muted: rgba(244, 234, 220, 0.68);
+      --faint: rgba(216, 195, 158, 0.14);
+      --line: rgba(244, 234, 220, 0.16);
+      --ease: cubic-bezier(0.19, 1, 0.22, 1);
+      --px: 0px;
+      --py: 0px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--ink);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100%;
+      width: 100%;
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--ink);
+      color: var(--ivory);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0.01em;
+      touch-action: manipulation;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    body::before {
+      z-index: 40;
+      opacity: 0.09;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.7) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(255, 255, 255, 0.6) 1px, transparent 1px);
+      background-size: 3px 3px;
+      mix-blend-mode: soft-light;
+    }
+
+    body::after {
+      z-index: 39;
+      background:
+        radial-gradient(circle at 50% 42%, transparent 0 42%, rgba(0, 0, 0, 0.26) 78%, rgba(0, 0, 0, 0.62) 100%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.34));
+    }
+
+    button {
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .atmosphere {
+      position: fixed;
+      inset: 0;
+      z-index: -5;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(216, 195, 158, 0.1), transparent 18rem),
+        radial-gradient(circle at 78% 46%, rgba(185, 135, 134, 0.08), transparent 24rem),
+        radial-gradient(circle at 16% 74%, rgba(77, 66, 102, 0.17), transparent 26rem),
+        linear-gradient(180deg, #01030a 0%, #070b18 44%, #18111d 100%);
+      opacity: 0;
+      animation: nightArrives 1.5s ease forwards;
+    }
+
+    .atmosphere::before {
+      content: "";
+      position: absolute;
+      inset: -16% -18% 34%;
+      background:
+        linear-gradient(105deg, transparent 15%, rgba(208, 188, 150, 0.08) 36%, transparent 56%),
+        linear-gradient(72deg, transparent 26%, rgba(98, 89, 128, 0.14) 48%, transparent 70%);
+      filter: blur(38px);
+      opacity: 0.62;
+      transform: translate3d(calc(var(--px) * 0.18), calc(var(--py) * 0.12), 0) skewY(-6deg);
+      animation: slowAurora 22s ease-in-out infinite alternate;
+    }
+
+    .stars,
+    .dust,
+    .rare-hearts {
+      position: fixed;
+      inset: 0;
+      z-index: -4;
+      overflow: hidden;
+      pointer-events: none;
+      opacity: 0;
+      animation: quietReveal 2.2s 0.5s ease forwards;
+    }
+
+    .dust {
+      z-index: -3;
+      animation-delay: 0.9s;
+    }
+
+    .rare-hearts {
+      z-index: -2;
+      animation-delay: 1.2s;
+    }
+
+    .star,
+    .mote {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      width: var(--s);
+      height: var(--s);
+      border-radius: 50%;
+    }
+
+    .star {
+      background: rgba(244, 234, 220, 0.84);
+      box-shadow: 0 0 0.55rem rgba(244, 234, 220, 0.36);
+      animation: starBreathe var(--d) ease-in-out infinite alternate;
+      animation-delay: var(--delay);
+    }
+
+    .mote {
+      background: rgba(216, 195, 158, 0.6);
+      box-shadow: 0 0 0.9rem rgba(216, 195, 158, 0.4);
+      animation: moteDrift var(--d) ease-in-out infinite alternate;
+      animation-delay: var(--delay);
+    }
+
+    .heart {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      color: rgba(185, 135, 134, 0.26);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: var(--s);
+      animation: heartDrift var(--d) ease-in-out infinite alternate;
+      animation-delay: var(--delay);
+    }
+
+    .music {
+      position: fixed;
+      top: max(1rem, env(safe-area-inset-top));
+      left: max(1rem, env(safe-area-inset-left));
+      z-index: 31;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      opacity: 0;
+      transform: translateY(-0.45rem);
+      animation: titleIn 1.1s 2s var(--ease) forwards;
+    }
+
+    .music-button {
+      display: grid;
+      place-items: center;
+      width: 2.65rem;
+      min-width: 44px;
+      min-height: 44px;
+      border: 1px solid rgba(216, 195, 158, 0.28);
+      border-radius: 999px;
+      background: rgba(244, 234, 220, 0.055);
+      color: rgba(244, 234, 220, 0.86);
+      box-shadow: 0 1.1rem 2.6rem rgba(0, 0, 0, 0.24);
+      backdrop-filter: blur(12px);
+      transition: background 500ms var(--ease), border-color 500ms var(--ease), transform 500ms var(--ease);
+    }
+
+    .music-button:hover,
+    .music-button:focus-visible {
+      border-color: rgba(216, 195, 158, 0.46);
+      background: rgba(244, 234, 220, 0.09);
+      outline: none;
+      transform: translateY(-1px);
+    }
+
+    .music span {
+      color: rgba(216, 195, 158, 0.52);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: min(1220px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: clamp(5.8rem, 11vw, 8.8rem) 0 clamp(3rem, 6vw, 5rem);
+    }
+
+    header {
+      position: relative;
+      display: grid;
+      justify-items: center;
+      margin: 0 auto clamp(5.8rem, 10vw, 9rem);
+      text-align: center;
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: clamp(12rem, 34vw, 28rem);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(216, 195, 158, 0.18), rgba(185, 135, 134, 0.08) 38%, transparent 68%);
+      filter: blur(10px);
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.92);
+      animation: glowIn 1.8s 0.65s ease forwards;
+      pointer-events: none;
+    }
+
+    h1 {
+      position: relative;
+      margin: 0;
+      color: #f7eee1;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.6rem, 7vw, 4rem);
+      font-weight: 500;
+      line-height: 0.96;
+      letter-spacing: 0.06em;
+      text-shadow: 0 0 2.8rem rgba(216, 195, 158, 0.2);
+      opacity: 0;
+      transform: translateY(0.85rem);
+      animation: titleIn 1.45s 1.1s var(--ease) forwards;
+    }
+
+    .subline,
+    .caption {
+      position: relative;
+      margin: 0;
+      opacity: 0;
+      transform: translateY(0.6rem);
+      animation: titleIn 1.2s var(--delay) var(--ease) forwards;
+    }
+
+    .subline {
+      --delay: 2.05s;
+      margin-top: 1.3rem;
+      color: rgba(216, 195, 158, 0.84);
+      font-size: clamp(0.78rem, 1.5vw, 0.92rem);
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .caption {
+      --delay: 2.35s;
+      max-width: 32rem;
+      margin-top: 1rem;
+      color: var(--muted);
+      font-size: clamp(0.95rem, 1.8vw, 1.05rem);
+      line-height: 1.8;
+      letter-spacing: 0.04em;
+    }
+
+    main {
+      display: block;
+    }
+
+    .gallery {
+      position: relative;
+      display: grid;
+      grid-template-columns: 0.84fr 0.22fr 0.74fr;
+      grid-template-rows: auto auto auto;
+      gap: clamp(1.4rem, 3vw, 2.4rem);
+      align-items: center;
+      min-height: 76rem;
+    }
+
+    figure {
+      position: relative;
+      margin: 0;
+      border-radius: var(--radius);
+      opacity: 0;
+      transform: translate3d(0, 1.45rem, 0) scale(0.965);
+      transition:
+        opacity 1000ms ease,
+        transform 1000ms var(--ease),
+        filter 650ms var(--ease);
+      isolation: isolate;
+    }
+
+    figure.is-visible {
+      opacity: 1;
+      transform: translate3d(var(--move-x, 0px), var(--move-y, 0px), 0) scale(1);
+    }
+
+    figure:nth-child(1) {
+      grid-column: 1 / 3;
+      grid-row: 1 / 3;
+      width: min(100%, 660px);
+      --radius: 16px;
+      --frame: 10px;
+      --caption-x: 1rem;
+      z-index: 2;
+    }
+
+    figure:nth-child(2) {
+      grid-column: 3;
+      grid-row: 1;
+      width: min(88%, 380px);
+      justify-self: end;
+      align-self: end;
+      margin-bottom: -4.2rem;
+      --radius: 14px;
+      --frame: 1px;
+      --caption-x: 0.8rem;
+      z-index: 3;
+    }
+
+    figure:nth-child(3) {
+      grid-column: 2 / 4;
+      grid-row: 2 / 4;
+      width: min(76%, 570px);
+      justify-self: center;
+      margin-top: 6.2rem;
+      --radius: 18px;
+      --frame: 0px;
+      --caption-x: 1rem;
+      z-index: 1;
+    }
+
+    figure:nth-child(4) {
+      grid-column: 1 / 3;
+      grid-row: 3;
+      width: min(82%, 600px);
+      justify-self: start;
+      margin-top: 2.4rem;
+      margin-left: clamp(1rem, 5vw, 4.5rem);
+      --radius: 15px;
+      --frame: 8px;
+      --caption-x: 1rem;
+      z-index: 4;
+    }
+
+    .photo-button {
+      position: relative;
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      border: var(--frame) solid rgba(244, 234, 220, 0.82);
+      border-radius: var(--radius);
+      background: #0c0c13;
+      box-shadow:
+        0 2rem 4.8rem rgba(0, 0, 0, 0.46),
+        0 0 3rem rgba(216, 195, 158, 0.06);
+      transition:
+        box-shadow 650ms var(--ease),
+        border-color 650ms var(--ease),
+        transform 650ms var(--ease);
+    }
+
+    .photo-button::before,
+    .photo-button::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 650ms var(--ease);
+    }
+
+    .photo-button::before {
+      background:
+        linear-gradient(180deg, transparent 42%, rgba(2, 4, 13, 0.42) 100%),
+        radial-gradient(circle at 50% 100%, rgba(216, 195, 158, 0.1), transparent 52%);
+    }
+
+    .photo-button::after {
+      content: "view";
+      inset: auto 1rem 1rem auto;
+      width: auto;
+      height: auto;
+      padding: 0.38rem 0.68rem;
+      border: 1px solid rgba(244, 234, 220, 0.24);
+      border-radius: 999px;
+      background: rgba(2, 4, 13, 0.32);
+      color: rgba(244, 234, 220, 0.78);
+      font-size: 0.64rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      backdrop-filter: blur(10px);
+      transform: translateY(0.35rem);
+      transition: opacity 650ms var(--ease), transform 650ms var(--ease);
+    }
+
+    .photo-button img {
+      width: 100%;
+      height: 100%;
+      aspect-ratio: var(--ratio);
+      object-fit: cover;
+      object-position: center;
+      filter: contrast(1.02) brightness(0.92) saturate(0.9);
+      transform: scale(1);
+      transition: transform 700ms var(--ease), filter 700ms var(--ease);
+    }
+
+    figure:nth-child(1) img { --ratio: 4 / 5.25; object-position: center 42%; }
+    figure:nth-child(2) img { --ratio: 4 / 4.7; object-position: center 44%; }
+    figure:nth-child(3) img { --ratio: 4 / 3.35; object-position: center 46%; }
+    figure:nth-child(4) img { --ratio: 4 / 5; object-position: center 43%; }
+
+    figcaption {
+      position: absolute;
+      left: var(--caption-x);
+      right: var(--caption-x);
+      bottom: 0.92rem;
+      z-index: 3;
+      color: rgba(216, 195, 158, 0.82);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      line-height: 1.55;
+      text-transform: lowercase;
+      opacity: 0;
+      transform: translateY(0.45rem);
+      transition: opacity 650ms var(--ease), transform 650ms var(--ease);
+      pointer-events: none;
+    }
+
+    figure:hover .photo-button,
+    figure.touched .photo-button {
+      border-color: rgba(244, 234, 220, 0.94);
+      box-shadow:
+        0 2.4rem 5.6rem rgba(0, 0, 0, 0.5),
+        0 0 3.4rem rgba(216, 195, 158, 0.16);
+    }
+
+    figure:hover img,
+    figure.touched img {
+      filter: contrast(1.03) brightness(1.01) saturate(0.95);
+      transform: scale(1.035);
+    }
+
+    figure:hover figcaption,
+    figure.touched figcaption,
+    figure:hover .photo-button::before,
+    figure.touched .photo-button::before,
+    figure:hover .photo-button::after,
+    figure.touched .photo-button::after {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .ending {
+      display: grid;
+      justify-items: center;
+      gap: 1.2rem;
+      margin: clamp(7rem, 14vw, 11rem) auto 0;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(1rem);
+      transition: opacity 1100ms ease, transform 1100ms var(--ease);
+    }
+
+    .ending.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .ending p {
+      margin: 0;
+      color: rgba(244, 234, 220, 0.84);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 6vw, 3.9rem);
+      font-weight: 400;
+      line-height: 1.18;
+      letter-spacing: 0.03em;
+      white-space: pre-line;
+    }
+
+    .ending .heartmark {
+      color: rgba(216, 195, 158, 0.72);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.7rem, 4vw, 2.4rem);
+    }
+
+    footer {
+      color: rgba(216, 195, 158, 0.56);
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: grid;
+      place-items: center;
+      padding: 4.2rem 1rem 5.6rem;
+      background:
+        radial-gradient(circle at 50% 56%, rgba(216, 195, 158, 0.08), transparent 28rem),
+        rgba(1, 3, 10, 0.92);
+      backdrop-filter: blur(18px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 700ms ease, visibility 700ms ease;
+    }
+
+    .lightbox.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .viewer {
+      display: grid;
+      justify-items: center;
+      gap: 1rem;
+      width: min(92vw, 1120px);
+    }
+
+    .viewer img {
+      width: auto;
+      height: auto;
+      max-width: 88vw;
+      max-height: 82vh;
+      object-fit: contain;
+      border-radius: 14px;
+      box-shadow: 0 2rem 6rem rgba(0, 0, 0, 0.66), 0 0 3.6rem rgba(216, 195, 158, 0.12);
+      opacity: 0;
+      transform: scale(0.96);
+      transition: opacity 700ms ease, transform 700ms var(--ease);
+    }
+
+    .lightbox.open .viewer img {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .viewer img.switching {
+      opacity: 0;
+      transform: scale(0.975);
+    }
+
+    .viewer-meta {
+      display: grid;
+      justify-items: center;
+      gap: 0.45rem;
+      min-height: 3.3rem;
+      text-align: center;
+    }
+
+    .counter {
+      color: rgba(216, 195, 158, 0.72);
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+    }
+
+    .viewer-caption {
+      max-width: min(82vw, 34rem);
+      color: rgba(244, 234, 220, 0.76);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(0.98rem, 2vw, 1.22rem);
+      line-height: 1.5;
+    }
+
+    .close,
+    .light-prev,
+    .light-next {
+      position: fixed;
+      z-index: 32;
+      display: grid;
+      place-items: center;
+      min-width: 44px;
+      min-height: 44px;
+      border: 1px solid rgba(216, 195, 158, 0.18);
+      border-radius: 999px;
+      background: rgba(244, 234, 220, 0.045);
+      color: rgba(244, 234, 220, 0.72);
+      backdrop-filter: blur(12px);
+      transition: color 500ms var(--ease), border-color 500ms var(--ease), background 500ms var(--ease), transform 500ms var(--ease);
+    }
+
+    .close:hover,
+    .light-prev:hover,
+    .light-next:hover,
+    .close:focus-visible,
+    .light-prev:focus-visible,
+    .light-next:focus-visible {
+      color: rgba(244, 234, 220, 0.96);
+      border-color: rgba(216, 195, 158, 0.36);
+      background: rgba(244, 234, 220, 0.08);
+      outline: none;
+    }
+
+    .close {
+      top: max(1rem, env(safe-area-inset-top));
+      right: max(1rem, env(safe-area-inset-right));
+      font-size: 1.2rem;
+    }
+
+    .light-prev,
+    .light-next {
+      top: 50%;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.55rem;
+      transform: translateY(-50%);
+    }
+
+    .light-prev {
+      left: max(1rem, env(safe-area-inset-left));
+    }
+
+    .light-next {
+      right: max(1rem, env(safe-area-inset-right));
+    }
+
+    .light-prev:hover,
+    .light-prev:focus-visible,
+    .light-next:hover,
+    .light-next:focus-visible {
+      transform: translateY(-50%) scale(1.03);
+    }
+
+    @keyframes nightArrives {
+      to { opacity: 1; }
+    }
+
+    @keyframes quietReveal {
+      to { opacity: 1; }
+    }
+
+    @keyframes glowIn {
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    @keyframes titleIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slowAurora {
+      100% { translate: 4% 2%; }
+    }
+
+    @keyframes starBreathe {
+      0% { opacity: 0.18; transform: scale(0.82); }
+      100% { opacity: 0.86; transform: scale(1.08); }
+    }
+
+    @keyframes moteDrift {
+      100% { transform: translate3d(var(--dx), var(--dy), 0); }
+    }
+
+    @keyframes heartDrift {
+      100% { opacity: 0.42; transform: translate3d(0.45rem, -1.2rem, 0); }
+    }
+
+    @media (max-width: 920px) {
+      .page {
+        width: min(100% - 1.5rem, 760px);
+      }
+
+      .gallery {
+        grid-template-columns: 1fr 0.14fr 1fr;
+        min-height: 66rem;
+      }
+
+      figure:nth-child(1) { width: min(100%, 520px); }
+      figure:nth-child(2) { width: min(96%, 340px); margin-bottom: -2.2rem; }
+      figure:nth-child(3) { width: min(88%, 500px); margin-top: 4.4rem; }
+      figure:nth-child(4) { width: min(88%, 510px); margin-left: 1rem; }
+    }
+
+    @media (max-width: 680px) {
+      body::before {
+        opacity: 0.07;
+      }
+
+      .page {
+        width: 100%;
+        padding: 5.5rem 0 3rem;
+      }
+
+      header {
+        width: min(88vw, 30rem);
+        margin-bottom: 4.8rem;
+      }
+
+      h1 {
+        font-size: clamp(2.55rem, 13vw, 2.9rem);
+        letter-spacing: 0.05em;
+      }
+
+      .subline {
+        font-size: 0.7rem;
+        line-height: 1.6;
+      }
+
+      .caption {
+        font-size: 0.92rem;
+        line-height: 1.72;
+      }
+
+      .music span {
+        display: none;
+      }
+
+      .gallery {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 4.3rem;
+        min-height: 0;
+      }
+
+      figure,
+      figure:nth-child(1),
+      figure:nth-child(2),
+      figure:nth-child(3),
+      figure:nth-child(4) {
+        grid-column: auto;
+        grid-row: auto;
+        width: 90vw;
+        max-width: 27rem;
+        margin: 0;
+        justify-self: start;
+        --frame: 1px;
+        --radius: 14px;
+      }
+
+      figure:nth-child(odd) {
+        justify-self: start;
+        margin-left: 4vw;
+      }
+
+      figure:nth-child(even) {
+        justify-self: end;
+        margin-right: 4vw;
+      }
+
+      figure:nth-child(1) img,
+      figure:nth-child(2) img,
+      figure:nth-child(3) img,
+      figure:nth-child(4) img {
+        aspect-ratio: 4 / 5.05;
+      }
+
+      figcaption {
+        position: static;
+        margin-top: 0.8rem;
+        padding: 0 0.15rem;
+        color: rgba(216, 195, 158, 0.72);
+        opacity: 1;
+        transform: none;
+      }
+
+      .photo-button::before {
+        opacity: 0.34;
+      }
+
+      .photo-button::after {
+        opacity: 0;
+      }
+
+      figure.touched .photo-button::after {
+        opacity: 1;
+      }
+
+      .ending {
+        width: min(88vw, 28rem);
+        margin-top: 6.8rem;
+      }
+
+      .lightbox {
+        padding: 4rem 0.7rem 6.2rem;
+      }
+
+      .viewer img {
+        max-width: 88vw;
+        max-height: 76vh;
+        border-radius: 12px;
+      }
+
+      .light-prev,
+      .light-next {
+        top: auto;
+        bottom: max(1rem, env(safe-area-inset-bottom));
+        transform: none;
+      }
+
+      .light-prev:hover,
+      .light-prev:focus-visible,
+      .light-next:hover,
+      .light-next:focus-visible {
+        transform: translateY(-1px);
+      }
+
+      .viewer-meta {
+        min-height: 3.9rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .atmosphere,
+      .stars,
+      .dust,
+      .rare-hearts,
+      header::before,
+      h1,
+      .subline,
+      .caption,
+      .music,
+      figure,
+      .ending {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true"></div>
+  <div class="stars" aria-hidden="true"></div>
+  <div class="dust" aria-hidden="true"></div>
+  <div class="rare-hearts" aria-hidden="true"></div>
+
+  <aside class="music" aria-label="Music player">
+    <button class="music-button" type="button" aria-label="Play music">♪</button>
+    <span>music</span>
+    <audio src="audio/poo-bear.mp3" preload="auto" autoplay loop playsinline></audio>
+  </aside>
+
+  <div class="page">
+    <header>
+      <h1>Indy ♡</h1>
+      <p class="subline">little moments, kept close.</p>
+      <p class="caption">four little pieces of time that I never want to forget.</p>
+    </header>
+
+    <main>
+      <section class="gallery" aria-label="Private photo album for Indy">
+        <figure>
+          <button class="photo-button" type="button" aria-label="Open photo 1">
+            <img src="img/foto1.jpeg" data-fallback="img/foto1.jpeg" alt="A favorite little moment with Indy." />
+          </button>
+          <figcaption>one of my favorite little moments.</figcaption>
+        </figure>
+
+        <figure>
+          <button class="photo-button" type="button" aria-label="Open photo 2">
+            <img src="img/foto2.jpeg" data-fallback="img/foto2.jpeg" alt="A quiet moment with Indy that stayed close." />
+          </button>
+          <figcaption>somehow, this one stayed with me.</figcaption>
+        </figure>
+
+        <figure>
+          <button class="photo-button" type="button" aria-label="Open photo 3">
+            <img src="img/foto3.jpeg" data-fallback="img/foto3.jpeg" alt="A simple moment with Indy becoming a beautiful memory." />
+          </button>
+          <figcaption>simple moments become beautiful memories.</figcaption>
+        </figure>
+
+        <figure>
+          <button class="photo-button" type="button" aria-label="Open photo 4">
+            <img src="img/foto4.jpeg" data-fallback="img/foto4.jpeg" alt="A moment with Indy worth keeping forever." />
+          </button>
+          <figcaption>and I'd keep this moment forever.</figcaption>
+        </figure>
+      </section>
+
+      <section class="ending" aria-label="A quiet ending">
+        <p>some moments<br />are worth keeping.</p>
+        <div class="heartmark" aria-hidden="true">♡</div>
+        <footer>Made with ❤ by @daffa.reivan</footer>
+      </section>
+    </main>
+  </div>
+
+  <div class="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <button class="close" type="button" aria-label="Close">×</button>
+    <button class="light-prev" type="button" aria-label="Previous photo">‹</button>
+    <div class="viewer">
+      <img alt="" />
+      <div class="viewer-meta">
+        <div class="counter" aria-live="polite">01 / 04</div>
+        <div class="viewer-caption"></div>
+      </div>
+    </div>
+    <button class="light-next" type="button" aria-label="Next photo">›</button>
+  </div>
+
+  <script>
+    const photos = [
+      {
+        src: "img/foto1.jpeg",
+        fallback: "img/foto1.jpeg",
+        alt: "A favorite little moment with Indy.",
+        caption: "one of my favorite little moments."
+      },
+      {
+        src: "img/foto2.jpeg",
+        fallback: "img/foto2.jpeg",
+        alt: "A quiet moment with Indy that stayed close.",
+        caption: "somehow, this one stayed with me."
+      },
+      {
+        src: "img/foto3.jpeg",
+        fallback: "img/foto3.jpeg",
+        alt: "A simple moment with Indy becoming a beautiful memory.",
+        caption: "simple moments become beautiful memories."
+      },
+      {
+        src: "img/foto4.jpeg",
+        fallback: "img/foto4.jpeg",
+        alt: "A moment with Indy worth keeping forever.",
+        caption: "and I'd keep this moment forever."
+      }
+    ];
+
+    const stars = document.querySelector(".stars");
+    const dust = document.querySelector(".dust");
+    const hearts = document.querySelector(".rare-hearts");
+    const figures = Array.from(document.querySelectorAll("figure"));
+    const photoButtons = Array.from(document.querySelectorAll(".photo-button"));
+    const ending = document.querySelector(".ending");
+    const lightbox = document.querySelector(".lightbox");
+    const lightboxImage = document.querySelector(".viewer img");
+    const viewerCaption = document.querySelector(".viewer-caption");
+    const counter = document.querySelector(".counter");
+    const closeButton = document.querySelector(".close");
+    const prevButton = document.querySelector(".light-prev");
+    const nextButton = document.querySelector(".light-next");
+    const musicButton = document.querySelector(".music-button");
+    const audio = document.querySelector(".music audio");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let currentIndex = 0;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let horizontalSwipe = false;
+
+    const random = (min, max) => Math.random() * (max - min) + min;
+
+    function prepareImageFallbacks() {
+      document.querySelectorAll("img[data-fallback]").forEach(image => {
+        image.addEventListener("error", () => {
+          const fallback = image.getAttribute("data-fallback");
+          if (fallback && image.src.indexOf(fallback) === -1) {
+            image.src = fallback;
+          }
+        }, { once: true });
+      });
+    }
+
+    function createAtmosphere() {
+      for (let i = 0; i < 54; i += 1) {
+        const star = document.createElement("span");
+        star.className = "star";
+        star.style.setProperty("--x", random(3, 97) + "%");
+        star.style.setProperty("--y", random(3, 88) + "%");
+        star.style.setProperty("--s", random(0.8, 1.9) + "px");
+        star.style.setProperty("--d", random(5, 11) + "s");
+        star.style.setProperty("--delay", random(-9, 0) + "s");
+        stars.appendChild(star);
+      }
+
+      for (let i = 0; i < 15; i += 1) {
+        const mote = document.createElement("span");
+        mote.className = "mote";
+        mote.style.setProperty("--x", random(5, 95) + "%");
+        mote.style.setProperty("--y", random(24, 94) + "%");
+        mote.style.setProperty("--s", random(1.8, 3.5) + "px");
+        mote.style.setProperty("--dx", random(-34, 34) + "px");
+        mote.style.setProperty("--dy", random(-42, 28) + "px");
+        mote.style.setProperty("--d", random(13, 22) + "s");
+        mote.style.setProperty("--delay", random(-18, 0) + "s");
+        dust.appendChild(mote);
+      }
+
+      for (let i = 0; i < 3; i += 1) {
+        const heart = document.createElement("span");
+        heart.className = "heart";
+        heart.textContent = "♡";
+        heart.style.setProperty("--x", random(10, 90) + "%");
+        heart.style.setProperty("--y", random(36, 84) + "%");
+        heart.style.setProperty("--s", random(0.72, 1) + "rem");
+        heart.style.setProperty("--d", random(16, 24) + "s");
+        heart.style.setProperty("--delay", random(-18, 0) + "s");
+        hearts.appendChild(heart);
+      }
+    }
+
+    function revealOnScroll() {
+      if (!("IntersectionObserver" in window) || reducedMotion) {
+        figures.forEach(figure => figure.classList.add("is-visible"));
+        ending.classList.add("is-visible");
+        return;
+      }
+
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.18, rootMargin: "0px 0px -9% 0px" });
+
+      figures.forEach((figure, index) => {
+        figure.style.transitionDelay = 2.55 + index * 0.18 + "s";
+        observer.observe(figure);
+      });
+      observer.observe(ending);
+    }
+
+    function updateLightbox(immediate) {
+      const photo = photos[currentIndex];
+      const apply = () => {
+        lightboxImage.src = photo.src;
+        lightboxImage.alt = photo.alt;
+        counter.textContent = String(currentIndex + 1).padStart(2, "0") + " / 04";
+        viewerCaption.textContent = photo.caption;
+        lightboxImage.classList.remove("switching");
+      };
+
+      if (immediate || reducedMotion) {
+        apply();
+        return;
+      }
+
+      lightboxImage.classList.add("switching");
+      window.setTimeout(apply, 260);
+    }
+
+    function openLightbox(index) {
+      currentIndex = index;
+      updateLightbox(true);
+      lightbox.classList.add("open");
+      document.body.style.overflow = "hidden";
+      closeButton.focus({ preventScroll: true });
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove("open");
+      document.body.style.overflow = "";
+      photoButtons[currentIndex].focus({ preventScroll: true });
+    }
+
+    function nextPhoto() {
+      currentIndex = (currentIndex + 1) % photos.length;
+      updateLightbox(false);
+    }
+
+    function previousPhoto() {
+      currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+      updateLightbox(false);
+    }
+
+    function markTouched(index) {
+      if (!window.matchMedia("(hover: none)").matches) return;
+      figures.forEach((figure, figureIndex) => {
+        figure.classList.toggle("touched", figureIndex === index);
+      });
+    }
+
+    photoButtons.forEach((button, index) => {
+      button.addEventListener("pointerdown", () => markTouched(index), { passive: true });
+      button.addEventListener("click", () => openLightbox(index));
+    });
+
+    closeButton.addEventListener("click", closeLightbox);
+    nextButton.addEventListener("click", nextPhoto);
+    prevButton.addEventListener("click", previousPhoto);
+
+    lightboxImage.addEventListener("error", () => {
+      const photo = photos[currentIndex];
+      if (photo.fallback && lightboxImage.src.indexOf(photo.fallback) === -1) {
+        lightboxImage.src = photo.fallback;
+      }
+    });
+
+    lightbox.addEventListener("click", event => {
+      if (event.target === lightbox) closeLightbox();
+    });
+
+    window.addEventListener("keydown", event => {
+      if (!lightbox.classList.contains("open")) return;
+      if (event.key === "Escape") closeLightbox();
+      if (event.key === "ArrowRight") nextPhoto();
+      if (event.key === "ArrowLeft") previousPhoto();
+    });
+
+    lightbox.addEventListener("touchstart", event => {
+      if (!lightbox.classList.contains("open")) return;
+      const touch = event.changedTouches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+      horizontalSwipe = false;
+    }, { passive: true });
+
+    lightbox.addEventListener("touchmove", event => {
+      if (!lightbox.classList.contains("open")) return;
+      const touch = event.changedTouches[0];
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+      horizontalSwipe = Math.abs(dx) > 18 && Math.abs(dx) > Math.abs(dy) * 1.35;
+    }, { passive: true });
+
+    lightbox.addEventListener("touchend", event => {
+      if (!horizontalSwipe) return;
+      const touch = event.changedTouches[0];
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+      if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.35) return;
+      if (dx < 0) nextPhoto();
+      if (dx > 0) previousPhoto();
+    }, { passive: true });
+
+    function setMusicPlaying(isPlaying) {
+      musicButton.textContent = isPlaying ? "❚❚" : "♪";
+      musicButton.setAttribute("aria-label", isPlaying ? "Pause music" : "Play music");
+      if (isPlaying) {
+        musicButton.title = "Musik sedang diputar";
+      }
+    }
+
+    async function startMusic() {
+      try {
+        audio.volume = 0.46;
+        await audio.play();
+        setMusicPlaying(true);
+        return true;
+      } catch (error) {
+        setMusicPlaying(false);
+        musicButton.title = "Klik untuk memutar musik";
+        return false;
+      }
+    }
+
+    async function toggleMusic() {
+      if (audio.paused) {
+        startMusic();
+      } else {
+        audio.pause();
+        setMusicPlaying(false);
+      }
+    }
+
+    musicButton.addEventListener("click", toggleMusic);
+    audio.addEventListener("play", () => setMusicPlaying(true));
+    audio.addEventListener("pause", () => setMusicPlaying(false));
+    audio.addEventListener("error", () => {
+      musicButton.textContent = "♪";
+      musicButton.title = "audio/poo-bear.mp3 belum tersedia";
+    });
+
+    document.addEventListener("DOMContentLoaded", startMusic);
+    window.addEventListener("load", startMusic);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden && audio.paused) {
+        startMusic();
+      }
+    });
+    window.addEventListener("pointerdown", () => {
+      if (audio.paused) startMusic();
+    }, { once: true, passive: true });
+
+    window.addEventListener("pointermove", event => {
+      if (window.matchMedia("(max-width: 760px)").matches || reducedMotion) return;
+      const x = (event.clientX / window.innerWidth - 0.5) * 10;
+      const y = (event.clientY / window.innerHeight - 0.5) * 8;
+      document.documentElement.style.setProperty("--px", x + "px");
+      document.documentElement.style.setProperty("--py", y + "px");
+      figures.forEach((figure, index) => {
+        if (!figure.classList.contains("is-visible")) return;
+        const strength = index % 2 === 0 ? 0.25 : -0.2;
+        figure.style.setProperty("--move-x", x * strength + "px");
+        figure.style.setProperty("--move-y", y * strength + "px");
+      });
+    }, { passive: true });
+
+    createAtmosphere();
+    prepareImageFallbacks();
+    revealOnScroll();
+  </script>
+</body>
+</html>
